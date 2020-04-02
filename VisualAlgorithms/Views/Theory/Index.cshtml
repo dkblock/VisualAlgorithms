@@ -1,0 +1,19 @@
+﻿@model IEnumerable<Algorithm>
+@{
+    ViewData["Title"] = "Теория";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Теория</h1>
+</div>
+<br />
+<br />
+<ul>
+    @foreach (var algorithm in Model)
+    {
+        <li>
+            @algorithm.Name
+        </li>
+    }
+</ul>
+

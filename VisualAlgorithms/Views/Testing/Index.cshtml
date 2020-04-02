@@ -1,0 +1,26 @@
+﻿@model IEnumerable<VisualAlgorithms.ViewModels.TestViewModel>
+@{
+    ViewData["Title"] = "Тестирование";
+}
+
+<h1 class="display-4 text-center">Тестирование</h1>
+
+<table class="table text-center">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Название теста</th>
+            <th scope="col">Структура данных</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var test in Model)
+        {
+            <tr>
+                <td>@test.TestId</td>
+                <td>@test.TestName</td>
+                <td>@test.AlgorithmName</td>
+            </tr>
+        }
+    </tbody>
+</table>
