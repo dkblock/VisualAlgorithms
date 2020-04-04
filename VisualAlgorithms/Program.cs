@@ -1,13 +1,16 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
+using VisualAlgorithms.Initializers;
 using VisualAlgorithms.Models;
 
 namespace VisualAlgorithms
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
 
@@ -15,7 +18,11 @@ namespace VisualAlgorithms
             {
                 var serviceProvider = scope.ServiceProvider;
                 var context = serviceProvider.GetRequiredService<ApplicationContext>();
-                DataInitializer.Initialize(context);
+                var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+                await DataInitializer.Initialize(context);
+                await RolesInitializer.Initialize(userManager, roleManager);
             }
 
             host.Run();

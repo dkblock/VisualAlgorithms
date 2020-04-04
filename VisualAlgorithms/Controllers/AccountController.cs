@@ -17,6 +17,11 @@ namespace VisualAlgorithms.Controllers
             _signInManager = signInManager;
         }
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         [HttpGet]
         public IActionResult Register()
         {
@@ -30,7 +35,8 @@ namespace VisualAlgorithms.Controllers
             {
                 var user = new ApplicationUser
                 {
-                    UserName = model.Username,
+                    UserName = model.Email,
+                    Email = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     Group = model.Group
@@ -40,12 +46,15 @@ namespace VisualAlgorithms.Controllers
 
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "user");
                     await _signInManager.SignInAsync(user, false);
                     return RedirectToAction("Index", "Home");
                 }
                 else
+                {
                     foreach (var error in result.Errors)
                         ModelState.AddModelError(string.Empty, error.Description);
+                }
             }
 
             return View(model);

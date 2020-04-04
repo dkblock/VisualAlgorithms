@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using VisualAlgorithms.Models;
 
-namespace VisualAlgorithms.Models
+namespace VisualAlgorithms.Initializers
 {
     public static class DataInitializer
     {
-        public static void Initialize(ApplicationContext db)
+        public static async Task Initialize(ApplicationContext db)
         {
             if (!db.Algorithms.Any())
             {
@@ -25,8 +27,8 @@ namespace VisualAlgorithms.Models
                     }
                 };
 
-                db.Algorithms.AddRange(algorithms);
-                db.SaveChanges();
+                await db.Algorithms.AddRangeAsync(algorithms);
+                await db.SaveChangesAsync();
             }
         }
     }

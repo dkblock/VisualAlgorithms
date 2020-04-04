@@ -1,5 +1,4 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@using VisualAlgorithms.Models
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -7,13 +6,24 @@
 <ul class="navbar-nav mr-auto">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="nav-item">
-            <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@UserManager.GetUserName(User)</a>
-        </li>
-        <li class="nav-item">
-            <form id="logoutForm" class="form-inline" asp-controller="Account" asp-action="Logout">
-                <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Выйти</button>
-            </form>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                @UserManager.GetUserName(User)
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <form id="manageForm" class="dropdown-item form-inline" asp-controller="Account" asp-action="Index">
+                    <button id="manage" type="submit" class="nav-link btn btn-link text-dark">Аккаунт</button>
+                </form>
+                @if (User.IsInRole("admin"))
+                {
+                    <form id="administrationForm" class="dropdown-item form-inline" asp-controller="Admin" asp-action="Index">
+                        <button id="administration" type="submit" class="nav-link btn btn-link text-dark">Админ-панель</button>
+                    </form>
+                }
+                <form id="logoutForm" class="dropdown-item form-inline" asp-controller="Account" asp-action="Logout">
+                    <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Выйти</button>
+                </form>
+            </div>
         </li>
     }
     else
