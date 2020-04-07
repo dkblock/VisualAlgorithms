@@ -50,11 +50,9 @@ namespace VisualAlgorithms.Controllers
                     await _signInManager.SignInAsync(user, false);
                     return RedirectToAction("Index", "Home");
                 }
-                else
-                {
-                    foreach (var error in result.Errors)
-                        ModelState.AddModelError(string.Empty, error.Description);
-                }
+
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError(string.Empty, error.Description);
             }
 
             return View(model);
@@ -78,11 +76,11 @@ namespace VisualAlgorithms.Controllers
                 {
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                         return Redirect(model.ReturnUrl);
-                    else
-                        return RedirectToAction("Index", "Home");
+                    
+                    return RedirectToAction("Index", "Home");
                 }
-                else
-                    ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+
+                ModelState.AddModelError("", "Неправильный логин и (или) пароль");
             }
 
             return View(model);

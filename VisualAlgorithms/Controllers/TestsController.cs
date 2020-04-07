@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using VisualAlgorithms.Models;
 using VisualAlgorithms.ViewModels;
 
@@ -18,17 +19,12 @@ namespace VisualAlgorithms.Controllers
 
         public IActionResult Index()
         {
-            var tests = _db.Tests.ToList();
-            var algorithms = _db.Algorithms.ToList();
+            var tests = _db.Tests
+                .Include(t => t.Questions)
+                .Include(t => t.Algorithm)
+                .ToList();
 
-            var testViews = tests.Select(test => new TestViewModel
-            {
-                Id = test.Id,
-                TestName = test.Name,
-                AlgorithmName = algorithms.Single(al => al.Id == test.AlgorithmId).Name
-            });
-
-            return View(testViews);
+            return View(tests);
         }
 
         [Authorize(Roles = "admin")]
@@ -55,17 +51,30 @@ namespace VisualAlgorithms.Controllers
                     AlgorithmId = testModel.AlgorithmId
                 };
 
-                await _db.Tests.AddAsync(test);
+                var result = await _db.Tests.AddAsync(test);
                 await _db.SaveChangesAsync();
+
+                return RedirectToAction("Create", "TestQuestion", new { testId = result.Entity.Id });
             }
 
             return RedirectToAction("Index");
         }
 
-        public IActionResult Test(int id)
+        public async Task<IActionResult> Test(int id)
         {
+            var test = await _db.Tests.FindAsync(id);
+            var algorithm = await _db.Algorithms.SingleAsync(al => al.Id == test.AlgorithmId);
+            var questionsCount = _db.TestQuestions.Count(q => q.TestId == id);
 
-            return View();
+            var testModel = new TestViewModel
+            {
+                Id = test.Id,
+                TestName = test.Name,
+                AlgorithmName = algorithm.Name,
+                QuestionsCount = questionsCount
+            };
+
+            return View(testModel);
         }
     }
 }

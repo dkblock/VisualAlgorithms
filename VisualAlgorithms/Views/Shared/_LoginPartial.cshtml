@@ -6,9 +6,12 @@
 <ul class="navbar-nav mr-auto">
     @if (SignInManager.IsSignedIn(User))
     {
+        var firstName = UserManager.GetUserAsync(User).Result.FirstName;
+        var lastName = UserManager.GetUserAsync(User).Result.LastName;
+        var username = $"{firstName} {lastName}";
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                @UserManager.GetUserName(User)
+                @username
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <form id="manageForm" class="dropdown-item form-inline" asp-controller="Account" asp-action="Index">

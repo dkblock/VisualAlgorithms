@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using VisualAlgorithms.ViewModels;
 
 namespace VisualAlgorithms.Models
 {
@@ -10,11 +9,25 @@ namespace VisualAlgorithms.Models
             : base(options)
         {
             Database.EnsureCreated();
-        }        
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Test>()
+                .HasOne(t => t.Algorithm)
+                .WithMany(al => al.Tests)
+                .HasForeignKey(t => t.AlgorithmId);
+
+            builder.Entity<TestQuestion>()
+                .HasOne(tq => tq.Test)
+                .WithMany(t => t.Questions)
+                .HasForeignKey(tq => tq.TestId);
+        }
 
         public DbSet<Algorithm> Algorithms { get; set; }
         public DbSet<Test> Tests { get; set; }
         public DbSet<TestQuestion> TestQuestions { get; set; }
-        public DbSet<VisualAlgorithms.ViewModels.TestViewModel> TestViewModel { get; set; }
     }
 }

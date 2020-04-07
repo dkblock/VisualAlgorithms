@@ -6,14 +6,13 @@ namespace VisualAlgorithms.Models
     {
         public int Id { get; set; }
 
-        [Display(Name = "Название")]
-        public string Name { get; set; }
+        [Display(Name = "Вопрос")]
+        public string Question { get; set; }
 
-        [Display(Name = "Тип вопроса")] 
-        public QuestionType QuestionType { get; set; }
-
+        [Display(Name = "Ответ")]
         public int Answer { get; set; }
 
+        public Test Test { get; set; }
         public int TestId { get; set; }
     }
 

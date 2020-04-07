@@ -1,20 +1,23 @@
-﻿@model IEnumerable<VisualAlgorithms.ViewModels.TestViewModel>
+﻿@model IEnumerable<VisualAlgorithms.Models.Test>
 @{
     ViewData["Title"] = "Тесты";
 }
 
-    <h1 class="display-4 text-center">Тесты</h1>
+<h1 class="display-4 text-center">Тесты</h1>
 
 <table class="table text-center">
     <thead>
-    <tr>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.TestName)
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.AlgorithmName)
-        </th>
-    </tr>
+        <tr>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Algorithm.Name)
+            </th>
+            <th scope="col">
+                Количество вопросов
+            </th>
+        </tr>
     </thead>
     <tbody>
     @foreach (var test in Model)
@@ -22,11 +25,14 @@
         <tr>
             <td>
                 <a class="list-group-item list-group-item-action" asp-controller="Tests" asp-action="Test" asp-route-id="@test.Id">
-                    @Html.DisplayFor(modelItem => test.TestName)
+                    @Html.DisplayFor(modelItem => test.Name)
                 </a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => test.AlgorithmName)
+                @Html.DisplayFor(modelItem => test.Algorithm.Name)
+            </td>
+            <td>
+                @test.Questions.Count()
             </td>
         </tr>
     }
