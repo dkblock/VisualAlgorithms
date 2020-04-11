@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VisualAlgorithms.Models
 {
@@ -8,8 +9,14 @@ namespace VisualAlgorithms.Models
         [Display(Name = "Результат (%)")]
         public double Result { get; set; }
 
+        [Display(Name = "Правильных ответов")]
+        public int CorrectAnswers { get; set; }
+
+        [Display(Name = "Всего вопросов")]
+        public int TotalQuestions { get; set; }
+
         [Display(Name = "Дата прохождения")]
-        public DateTime PassionTime { get; set; }
+        public DateTime PassingTime { get; set; }
 
         public string UserId { get; set; }
 

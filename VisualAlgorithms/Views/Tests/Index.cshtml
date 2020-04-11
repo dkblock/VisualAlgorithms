@@ -14,9 +14,6 @@
             <th scope="col">
                 @Html.DisplayNameFor(model => model.Algorithm.Name)
             </th>
-            <th scope="col">
-                Количество вопросов
-            </th>
         </tr>
     </thead>
     <tbody>
@@ -30,9 +27,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => test.Algorithm.Name)
-            </td>
-            <td>
-                @test.TestQuestions.Count()
             </td>
         </tr>
     }

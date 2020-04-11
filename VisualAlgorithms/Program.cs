@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
-using VisualAlgorithms.Initializers;
+using VisualAlgorithms.AppMiddleware;
 using VisualAlgorithms.Models;
 
 namespace VisualAlgorithms

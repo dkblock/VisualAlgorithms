@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VisualAlgorithms.AppMiddleware;
 using VisualAlgorithms.Models;
 
 namespace VisualAlgorithms
@@ -22,6 +23,8 @@ namespace VisualAlgorithms
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>();
             services.AddControllersWithViews();
+
+            services.AddScoped<TestsManager, TestsManager>();
         }
 
         public void Configure(IApplicationBuilder app)

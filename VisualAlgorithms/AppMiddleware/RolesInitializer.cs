@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using VisualAlgorithms.Models;
 
-namespace VisualAlgorithms.Initializers
+namespace VisualAlgorithms.AppMiddleware
 {
     public static class RolesInitializer
     {
