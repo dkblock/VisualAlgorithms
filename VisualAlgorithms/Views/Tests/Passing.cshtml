@@ -1,0 +1,44 @@
+﻿@model VisualAlgorithms.Models.UserAnswer
+
+@{
+    ViewData["Title"] = "Passing";
+}
+
+<h1>Passing</h1>
+
+<h4>TestAnswer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Passing">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @Html.HiddenFor(modelItem => Model.TestQuestion)
+            @Html.HiddenFor(modelItem => Model.TestQuestionId)
+            <div class="form-group">
+                @Html.DisplayFor(modelItem => Model.TestQuestion.Question)
+            </div>
+            <div class="form-group">
+                <label asp-for="Answer" class="control-label"></label>
+                <input asp-for="Answer" class="form-control" />
+                <span asp-validation-for="Answer" class="text-danger"></span>
+            </div>
+            @if (!Model.TestQuestion.IsLastQuestion)
+            {
+                <div class="form-group">
+                    <button type="submit" asp-action="OnNextQuestionPassing" class="btn btn-primary">Следующий вопрос</button>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <button type="submit" asp-action="OnEndTestPassing" class="btn btn-primary">Завершить</button>
+                </div>
+            }
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

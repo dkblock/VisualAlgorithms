@@ -1,80 +1,155 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VisualAlgorithms.Models;
-using VisualAlgorithms.ViewModels;
 
 namespace VisualAlgorithms.Controllers
 {
     public class TestsController : Controller
     {
         private readonly ApplicationContext _db;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public TestsController(ApplicationContext db)
+        public TestsController(ApplicationContext db, UserManager<ApplicationUser> userManager)
         {
             _db = db;
+            _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var tests = _db.Tests
-                .Include(t => t.Questions)
+            var tests = await _db.Tests
+                .Include(t => t.TestQuestions)
                 .Include(t => t.Algorithm)
-                .ToList();
+                .ToListAsync();
 
             return View(tests);
         }
 
         [Authorize(Roles = "admin")]
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var model = new CreateTestViewModel
-            {
-                Algorithms = _db.Algorithms.ToList()
-            };
-            
-            return View(model);
+            ViewBag.Algorithms = await _db.Algorithms.ToListAsync();
+            return View();
         }
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public async Task <ActionResult> Create([Bind("TestName", "AlgorithmId")] CreateTestViewModel testModel)
+        public async Task<ActionResult> Create(Test test)
         {
             if (ModelState.IsValid)
             {
-                var test = new Test
-                {
-                    Name = testModel.TestName,
-                    AlgorithmId = testModel.AlgorithmId
-                };
-
                 var result = await _db.Tests.AddAsync(test);
                 await _db.SaveChangesAsync();
 
-                return RedirectToAction("Create", "TestQuestion", new { testId = result.Entity.Id });
+                return RedirectToAction("Create", "TestQuestion", new {testId = result.Entity.Id});
             }
 
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> Test(int id)
+        public async Task<IActionResult> Info(int id)
         {
-            var test = await _db.Tests.FindAsync(id);
-            var algorithm = await _db.Algorithms.SingleAsync(al => al.Id == test.AlgorithmId);
-            var questionsCount = _db.TestQuestions.Count(q => q.TestId == id);
+            var test = await _db.Tests
+                .Include(t => t.TestQuestions)
+                .Include(t => t.Algorithm)
+                .SingleAsync(t => t.Id == id);
 
-            var testModel = new TestViewModel
+            return View(test);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Passing(int testId, int? questionId)
+        {
+            var test = await _db.Tests
+                .Include(t => t.TestQuestions)
+                .SingleAsync(t => t.Id == testId);
+            var testQuestion = questionId == null
+                ? test.TestQuestions.First()
+                : test.TestQuestions.Single(q => q.Id == questionId);
+
+            var answer = new UserAnswer
             {
-                Id = test.Id,
-                TestName = test.Name,
-                AlgorithmName = algorithm.Name,
-                QuestionsCount = questionsCount
+                TestQuestion = testQuestion,
+                TestQuestionId = testQuestion.Id
             };
 
-            return View(testModel);
+            return View(answer);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> OnNextQuestionPassing(UserAnswer testAnswer)
+        {
+            await AddUserAnswer(testAnswer);
+
+            var question = await _db.TestQuestions
+                .Include(q => q.Test)
+                .ThenInclude(t => t.TestQuestions)
+                .SingleAsync(q => q.Id == testAnswer.TestQuestionId);
+            var test = question.Test;
+            var nextQuestion = test.TestQuestions
+                .OrderBy(tq => tq.Id)
+                .SkipWhile(q => q.Id != question.Id)
+                .Skip(1)
+                .First();
+
+            return RedirectToAction("Passing", new {testId = test.Id, questionId = nextQuestion.Id});
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> OnEndTestPassing(UserAnswer testAnswer)
+        {
+            await GetTestResult(testAnswer);
+            return RedirectToAction("Index");
+        }
+
+        private async Task AddUserAnswer(UserAnswer testAnswer)
+        {
+            testAnswer.UserId = _userManager.GetUserId(User);
+            await _db.UserAnswers.AddAsync(testAnswer);
+            await _db.SaveChangesAsync();
+        }
+
+        private async Task GetTestResult(UserAnswer testAnswer)
+        {
+            await AddUserAnswer(testAnswer);
+
+            var userId = _userManager.GetUserId(User);
+            var question = await _db.TestQuestions
+                .Include(q => q.Test)
+                .ThenInclude(t => t.TestQuestions)
+                .SingleAsync(q => q.Id == testAnswer.TestQuestionId);
+            var testQuestions = question.Test.TestQuestions.ToList();
+            var userAnswers = await _db.UserAnswers
+                .Where(ua => ua.UserId == userId && testQuestions.Select(tq => tq.Id).Contains(ua.TestQuestionId))
+                .ToListAsync();
+            var count = 0;
+
+            foreach (var userAnswer in userAnswers)
+            {
+                var answer = userAnswer.Answer;
+                var questionAnswer = testQuestions.Single(q => q.Id == userAnswer.TestQuestionId).Answer;
+
+                if (answer == questionAnswer)
+                    count++;
+            }
+
+            var result = (double)count / testQuestions.Count * 100;
+            var userTest = new UserTest
+            {
+                PassionTime = DateTime.Now,
+                Result = result,
+                TestId = question.TestId,
+                UserId = userId
+            };
+
+            await _db.UserTests.AddAsync(userTest);
+            await _db.SaveChangesAsync();
         }
     }
 }

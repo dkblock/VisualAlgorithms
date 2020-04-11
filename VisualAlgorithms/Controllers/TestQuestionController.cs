@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VisualAlgorithms.Models;
 
 namespace VisualAlgorithms.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class TestQuestionController : Controller
     {
         private readonly ApplicationContext _db;
@@ -21,30 +23,25 @@ namespace VisualAlgorithms.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> OnNextQuestionAddition(TestQuestion testQuestionModel)
+        public async Task<IActionResult> OnNextQuestionCreation(TestQuestion testQuestion)
         {
-            await AddQuestion(testQuestionModel);
-            return RedirectToAction("Create", new { testId = testQuestionModel.TestId });
+            await AddQuestion(testQuestion);
+            return RedirectToAction("Create", new { testId = testQuestion.TestId });
         }
 
         [HttpPost]
-        public async Task<IActionResult> OnEndTestCreation(TestQuestion testQuestionModel)
+        public async Task<IActionResult> OnEndTestCreation(TestQuestion testQuestion)
         {
-            await AddQuestion(testQuestionModel);
+            testQuestion.IsLastQuestion = true;
+            await AddQuestion(testQuestion);
+
             return RedirectToAction("Tests", "Admin");
         }
 
-        private async Task AddQuestion(TestQuestion testQuestionModel)
+        private async Task AddQuestion(TestQuestion testQuestion)
         {
             if (ModelState.IsValid)
             {
-                var testQuestion = new TestQuestion
-                {
-                    Question = testQuestionModel.Question,
-                    Answer = testQuestionModel.Answer,
-                    TestId = testQuestionModel.TestId
-                };
-
                 await _db.TestQuestions.AddAsync(testQuestion);
                 await _db.SaveChangesAsync();
             }

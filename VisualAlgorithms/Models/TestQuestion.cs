@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace VisualAlgorithms.Models
 {
@@ -12,8 +13,12 @@ namespace VisualAlgorithms.Models
         [Display(Name = "Ответ")]
         public int Answer { get; set; }
 
-        public Test Test { get; set; }
+        public bool IsLastQuestion { get; set; }
+
         public int TestId { get; set; }
+
+        public Test Test { get; set; }
+        public IEnumerable<UserAnswer> UserAnswers { get; set; }
     }
 
     public enum QuestionType

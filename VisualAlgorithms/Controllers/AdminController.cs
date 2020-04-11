@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using VisualAlgorithms.Models;
-using VisualAlgorithms.ViewModels;
 
 namespace VisualAlgorithms.Controllers
 {
@@ -21,19 +21,14 @@ namespace VisualAlgorithms.Controllers
             return View();
         }
 
-        public IActionResult Tests()
+        public async Task<IActionResult> Tests()
         {
-            var tests = _db.Tests.ToList();
-            var algorithms = _db.Algorithms.ToList();
+            var tests = await _db.Tests
+                .Include(t => t.Algorithm)
+                .Include(t => t.TestQuestions)
+                .ToListAsync();
 
-            var testViews = tests.Select(test => new TestViewModel
-            {
-                Id = test.Id,
-                TestName = test.Name,
-                AlgorithmName = algorithms.Single(al => al.Id == test.AlgorithmId).Name
-            });
-
-            return View(testViews);
+            return View(tests);
         }
     }
 }

@@ -4,10 +4,10 @@
     ViewData["Title"] = "Тесты";
 }
 
-<h1>Tests</h1>
+<h1>Infos</h1>
 
 <p>
-    <a asp-controller="Tests" asp-action="Create">Create New</a>
+    <a asp-controller="Tests" asp-action="Create">Добавить тест</a>
 </p>
 <table class="table">
     <thead>
@@ -35,12 +35,10 @@
                 @Html.DisplayFor(modelItem => test.Algorithm.Name)
             </td>
             <td>
-                @test.Questions.Count();
+                @test.TestQuestions.Count()
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@test.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@test.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@test.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@test.Id">Изменить</a> |
             </td>
         </tr>
     }

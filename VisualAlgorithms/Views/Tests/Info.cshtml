@@ -1,0 +1,35 @@
+﻿@model VisualAlgorithms.Models.Test
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h1>Info</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Algorithm.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Algorithm.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            Количество вопросов
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.TestQuestions.Count()
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Passing" asp-route-testId="@Model.Id">Начать</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
