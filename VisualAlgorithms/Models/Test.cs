@@ -7,7 +7,7 @@ namespace VisualAlgorithms.Models
     {
         public int Id { get; set; }
 
-        [Display(Name = "Название")]
+        [Display(Name = "Название теста")]
         public string Name { get; set; }
 
         public int AlgorithmId { get; set; }

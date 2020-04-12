@@ -30,5 +30,16 @@ namespace VisualAlgorithms.Controllers
 
             return View(tests);
         }
+
+        public async Task<IActionResult> Stats()
+        {
+            var userTests = await _db.UserTests
+                .Include(ut => ut.User)
+                .Include(ut => ut.Test)
+                .ThenInclude(t => t.Algorithm)
+                .ToListAsync();
+
+            return View(userTests);
+        }
     }
 }

@@ -51,7 +51,7 @@ namespace VisualAlgorithms.AppMiddleware
                 CorrectAnswers = count,
                 TotalQuestions = testQuestions.Count,
                 PassingTime = DateTime.Now,
-                Result = result,
+                Result = (int)result,
                 TestId = test.Id,
                 UserId = userId
             };

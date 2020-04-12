@@ -1,0 +1,62 @@
+﻿@model IEnumerable<VisualAlgorithms.Models.UserTest>
+
+@{
+    ViewData["Title"] = "Статистика";
+}
+
+<h1>Stats</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.Group)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Test.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Test.Algorithm.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Result)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PassingTime)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Group)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Test.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Test.Algorithm.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Result)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PassingTime)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

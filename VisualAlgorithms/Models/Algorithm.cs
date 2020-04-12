@@ -7,7 +7,7 @@ namespace VisualAlgorithms.Models
     {
         public int Id { get; set; }
 
-        [Display(Name = "Название")]
+        [Display(Name = "Структура данных")]
         public string Name { get; set; }
 
         public IEnumerable<Test> Tests { get; set; }

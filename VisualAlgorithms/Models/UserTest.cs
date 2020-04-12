@@ -7,7 +7,7 @@ namespace VisualAlgorithms.Models
     public class UserTest
     {
         [Display(Name = "Результат (%)")]
-        public double Result { get; set; }
+        public int Result { get; set; }
 
         [Display(Name = "Правильных ответов")]
         public int CorrectAnswers { get; set; }
