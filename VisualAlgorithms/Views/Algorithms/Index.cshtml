@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Algorithm>
+@{
+    ViewData["Title"] = "Алгоритмы";
+}
+
+<div class="card-deck">
+    @foreach (var algorithm in Model)
+    {
+        <div class="card">
+            <img class="card-img-top" src="@Url.Content("images")/@algorithm.ImageUrl" alt="Algorithm image">
+            <div class="card-body card-body-bordered">
+                <h5 class="card-title">@algorithm.Name</h5>
+                <div class="card-body-btn-box">
+                    <a class="btn btn-primary card-body-btn" asp-controller="Algorithms" asp-action="Info" asp-route-id="@algorithm.Id">Информация</a>
+                    <a class="btn btn-primary card-body-btn" asp-controller="Tests" asp-action="Index">Конструктор</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

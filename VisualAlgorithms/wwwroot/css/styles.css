@@ -1,0 +1,13 @@
+﻿.card-body-btn-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.card-body-bordered {
+    border-top: 1px solid rgba(0, 0, 0, .125);
+}
+
+.card-body-btn {
+    width: 135px;
+}

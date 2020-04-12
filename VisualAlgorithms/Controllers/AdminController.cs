@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,7 @@ namespace VisualAlgorithms.Controllers
                 .Include(ut => ut.User)
                 .Include(ut => ut.Test)
                 .ThenInclude(t => t.Algorithm)
+                .OrderByDescending(ut => ut.PassingTime)
                 .ToListAsync();
 
             return View(userTests);

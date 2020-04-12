@@ -15,15 +15,18 @@ namespace VisualAlgorithms.AppMiddleware
                 {
                     new Algorithm
                     {
-                        Name = "Бинарное дерево поиска"
+                        Name = "Бинарное дерево поиска",
+                        ImageUrl = "binary-tree.png"
                     },
                     new Algorithm
                     {
-                        Name = "AVL-дерево"
+                        Name = "AVL-дерево",
+                        ImageUrl = "avl-tree.png"
                     },
                     new Algorithm
                     {
-                        Name = "Красно-чёрное дерево"
+                        Name = "Красно-чёрное дерево",
+                        ImageUrl = "red-black-tree.png"
                     }
                 };
 

@@ -15,6 +15,11 @@ namespace VisualAlgorithms.Models
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<Algorithm>()
+                .HasOne(al => al.AlgorithmTimeComplexity)
+                .WithOne(atc => atc.Algorithm)
+                .HasForeignKey<AlgorithmTimeComplexity>(atc => atc.AlgorithmId);
+
             builder.Entity<Test>()
                 .HasOne(t => t.Algorithm)
                 .WithMany(al => al.Tests)
@@ -51,6 +56,7 @@ namespace VisualAlgorithms.Models
         }
 
         public DbSet<Algorithm> Algorithms { get; set; }
+        public DbSet<AlgorithmTimeComplexity> AlgorithmTimeComplexities { get; set; }
         public DbSet<Test> Tests { get; set; }
         public DbSet<TestQuestion> TestQuestions { get; set; }
         public DbSet<UserAnswer> UserAnswers { get; set; }

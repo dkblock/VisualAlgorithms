@@ -10,6 +10,11 @@ namespace VisualAlgorithms.Models
         [Display(Name = "Структура данных")]
         public string Name { get; set; }
 
+        public string ImageUrl { get; set; }
+
+        public int AlgorithmTimeComplexityId { get; set; }
+
+        public AlgorithmTimeComplexity AlgorithmTimeComplexity { get; set; }
         public IEnumerable<Test> Tests { get; set; }
     }
 }
