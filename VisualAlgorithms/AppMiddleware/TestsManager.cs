@@ -39,7 +39,7 @@ namespace VisualAlgorithms.AppMiddleware
             foreach (var answer in userAnswers)
             {
                 var currentAnswer = answer.Answer;
-                var questionAnswer = testQuestions.Single(q => q.Id == answer.TestQuestionId).Answer;
+                var questionAnswer = testQuestions.Single(q => q.Id == answer.TestQuestionId).CorrectAnswerId;
 
                 if (currentAnswer == questionAnswer)
                     count++;

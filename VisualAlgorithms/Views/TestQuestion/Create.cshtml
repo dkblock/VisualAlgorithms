@@ -1,4 +1,5 @@
-﻿@model VisualAlgorithms.Models.TestQuestion
+﻿@using VisualAlgorithms.Components
+@model VisualAlgorithms.ViewModels.TestQuestionCreateViewModel
 
 @{
     ViewData["Title"] = "Добавление вопроса";
@@ -7,33 +8,12 @@
 <h1>Create</h1>
 
 <h4>InfoQuestion</h4>
-<hr />
+<hr/>
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @Html.HiddenFor(model => model.TestId)
-            <div class="form-group">
-                <label asp-for="Question" class="control-label"></label>
-                <textarea asp-for="Question" rows="3" class="form-control"></textarea>
-                <span asp-validation-for="Question" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Answer" class="control-label"></label>
-                <input asp-for="Answer" class="form-control" />
-                <span asp-validation-for="Answer" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <button type="submit" asp-action="OnNextQuestionCreation" class="btn btn-primary">Следующий вопрос</button>
-            </div>
-            <div class="form-group">
-                <button type="submit" asp-action="OnEndTestCreation" class="btn btn-primary">Завершить</button>
-            </div>
-        </form>
+        @(await Html.RenderComponentAsync<TestQuestionCreateComponent>(RenderMode.ServerPrerendered, new { QuestionModel = Model }))
     </div>
 </div>
-
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-

@@ -23,6 +23,8 @@ namespace VisualAlgorithms
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>();
             services.AddControllersWithViews();
+            services.AddRazorPages();
+            services.AddServerSideBlazor();
 
             services.AddScoped<TestsManager, TestsManager>();
         }
@@ -41,6 +43,8 @@ namespace VisualAlgorithms
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
+                endpoints.MapBlazorHub();
             });
         }
     }
