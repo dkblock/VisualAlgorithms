@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -15,8 +16,16 @@ namespace VisualAlgorithms.AppMiddleware
             _db = db;
         }
 
-        public async Task AddUserAnswer(UserAnswer userAnswer)
+        public async Task ProcessUserAnswer(UserAnswer userAnswer)
         {
+            var testQuestion = await _db.TestQuestions.FindAsync(userAnswer.TestQuestionId);
+            var correctAnswer = await _db.TestAnswers.FindAsync(testQuestion.CorrectAnswerId);
+
+            userAnswer.IsCorrect = userAnswer.Answer.Equals(
+                testQuestion.TestQuestionType == TestQuestionType.FreeAnswer
+                ? correctAnswer.Answer
+                : correctAnswer.Id.ToString());
+
             await _db.UserAnswers.AddAsync(userAnswer);
             await _db.SaveChangesAsync();
         }
@@ -34,24 +43,14 @@ namespace VisualAlgorithms.AppMiddleware
                 .Where(ua => ua.UserId == userId && testQuestions.Select(tq => tq.Id).Contains(ua.TestQuestionId))
                 .ToListAsync();
 
-            var count = 0;
-
-            foreach (var answer in userAnswers)
-            {
-                var currentAnswer = answer.Answer;
-                var questionAnswer = testQuestions.Single(q => q.Id == answer.TestQuestionId).CorrectAnswerId;
-
-                if (currentAnswer == questionAnswer)
-                    count++;
-            }
-
-            var result = (double) count / testQuestions.Count * 100;
+            var correctAnswersCount = userAnswers.Count(ua => ua.IsCorrect);
+            var result = (double) correctAnswersCount / testQuestions.Count * 100;
             var userTest = new UserTest
             {
-                CorrectAnswers = count,
+                CorrectAnswers = correctAnswersCount,
                 TotalQuestions = testQuestions.Count,
                 PassingTime = DateTime.Now,
-                Result = (int)result,
+                Result = (int) result,
                 TestId = test.Id,
                 UserId = userId
             };
@@ -76,6 +75,20 @@ namespace VisualAlgorithms.AppMiddleware
                 _db.UserAnswers.RemoveRange(userAnswers);
                 _db.UserTests.Remove(userTest);
                 await _db.SaveChangesAsync();
+            }
+        }
+
+        public void MixTestAnswers(List<TestAnswer> testAnswers)
+        {
+            var rnd = new Random();
+
+            for (var i = testAnswers.Count - 1; i >= 1; i--)
+            {
+                var j = rnd.Next(i + 1);
+
+                var tmp = testAnswers[j];
+                testAnswers[j] = testAnswers[i];
+                testAnswers[i] = tmp;
             }
         }
     }

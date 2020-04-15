@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -81,11 +80,14 @@ namespace VisualAlgorithms.Controllers
 
             var test = await _db.Tests
                 .Include(t => t.TestQuestions)
+                .ThenInclude(tq => tq.TestAnswers)
                 .SingleAsync(t => t.Id == testId);
 
             var testQuestion = questionId == null
                 ? test.TestQuestions.First()
                 : test.TestQuestions.Single(q => q.Id == questionId);
+
+             _testsManager.MixTestAnswers(testQuestion.TestAnswers);
 
             var userAnswer = new UserAnswer
             {
@@ -101,7 +103,7 @@ namespace VisualAlgorithms.Controllers
         public async Task<IActionResult> OnNextQuestionPassing(UserAnswer userAnswer)
         {
             userAnswer.UserId = GetUserId();
-            await _testsManager.AddUserAnswer(userAnswer);
+            await _testsManager.ProcessUserAnswer(userAnswer);
 
             var question = await _db.TestQuestions
                 .Include(q => q.Test)
@@ -122,7 +124,7 @@ namespace VisualAlgorithms.Controllers
         public async Task<IActionResult> OnEndTestPassing(UserAnswer userAnswer)
         {
             userAnswer.UserId = GetUserId();
-            await _testsManager.AddUserAnswer(userAnswer);
+            await _testsManager.ProcessUserAnswer(userAnswer);
             var result = await _testsManager.GetUserTestResult(userAnswer);
 
             return RedirectToAction("Result", new { testId = result.TestId, userId = result.UserId });

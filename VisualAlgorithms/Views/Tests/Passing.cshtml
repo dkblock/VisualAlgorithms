@@ -4,10 +4,6 @@
     ViewData["Title"] = "Passing";
 }
 
-<h1>Passing</h1>
-
-<h4>TestCorrectCorrectAnswerId</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Passing">
@@ -15,13 +11,32 @@
             @Html.HiddenFor(modelItem => Model.TestQuestion)
             @Html.HiddenFor(modelItem => Model.TestQuestionId)
             <div class="form-group">
-                @Html.DisplayFor(modelItem => Model.TestQuestion.Question)
+                <label asp-for="TestQuestion.Question" class="control-label">@Model.TestQuestion.Question</label>
             </div>
-            <div class="form-group">
-                <label asp-for="Answer" class="control-label"></label>
-                <input asp-for="Answer" class="form-control" />
-                <span asp-validation-for="Answer" class="text-danger"></span>
-            </div>
+
+            @if (Model.TestQuestion.TestQuestionType == TestQuestionType.FreeAnswer)
+            {
+                <div class="form-group">
+                    <label class="control-label">Введите ответ</label>
+                    <input asp-for="Answer" class="form-control"/>
+                    <span asp-validation-for="Answer" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label class="control-label">Выберите правильный ответ</label>
+                    @foreach (var answer in Model.TestQuestion.TestAnswers)
+                    {
+                        <p>
+                            <input type="radio" asp-for="Answer" value="@answer.Id.ToString()"/>
+                            @answer.Answer
+                        </p>
+                    }
+                    <span asp-validation-for="Answer" class="text-danger"></span>
+                </div>
+            }
+
             @if (!Model.TestQuestion.IsLastQuestion)
             {
                 <div class="form-group">
@@ -41,4 +56,3 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
