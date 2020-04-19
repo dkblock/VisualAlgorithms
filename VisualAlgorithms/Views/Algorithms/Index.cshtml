@@ -12,7 +12,7 @@
                 <h5 class="card-title">@algorithm.Name</h5>
                 <div class="card-body-btn-box">
                     <a class="btn btn-primary card-body-btn" asp-controller="Algorithms" asp-action="Info" asp-route-id="@algorithm.Id">Информация</a>
-                    <a class="btn btn-primary card-body-btn" asp-controller="Tests" asp-action="Index">Конструктор</a>
+                    <a class="btn btn-primary card-body-btn" asp-controller="Constructor"asp-action="Module"  asp-route-id="@algorithm.Id">Конструктор</a>
                 </div>
             </div>
         </div>

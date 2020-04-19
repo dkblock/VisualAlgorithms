@@ -1,4 +1,5 @@
-﻿@using System.Net.Http
+﻿@using System.IO
+@using System.Net.Http
 @using System.Text
 @using Microsoft.AspNetCore.Components
 @using Microsoft.AspNetCore.Components.Web
@@ -6,6 +7,8 @@
 @using Newtonsoft.Json
 @using VisualAlgorithms.Models
 @using VisualAlgorithms.ViewModels
+@using BlazorInputFile
+@using VisualAlgorithms.AppMiddleware
 
 @inject NavigationManager NavigationManager
 
@@ -17,6 +20,7 @@
             <InputTextArea Id="question" Class="form-control" @bind-Value="QuestionModel.TestQuestion.Question" />
             <ValidationMessage For="@(() => QuestionModel.TestQuestion.Question)" />
         </div>
+
         <div class="form-group">
             <label for="questionType">Тип вопроса: </label>
             <InputSelect Id="questionType" Class="form-control" @bind-Value="QuestionModel.TestQuestion.TestQuestionType">
@@ -25,6 +29,7 @@
             </InputSelect>
             <ValidationMessage For="@(() => QuestionModel.TestQuestion.TestQuestionType)" />
         </div>
+
         <div class="form-group">
             <label for="answer">Правильный ответ: </label>
             <InputText Id="answer" Class="form-control" @bind-Value="QuestionModel.TestAnswers[0].Answer" />
@@ -35,20 +40,21 @@
         {
             <div class="form-group">
                 <label for="answersCount">Вариантов ответа: </label>
-                <InputSelect Id="answerCount" Class="form-control" @bind-Value="AnswersCount">
+                <InputSelect Id="answerCount" Class="form-control" @bind-Value="_answersCount">
                     @for (int i = 1; i < 10; i++)
                         {
                             var num = $"{i}";
                         <option value="@num">@num</option>
                         }
+                    /**/
+                    /**/
                 </InputSelect>
             </div>
 
             <div class="form-group">
                 <label>Варианты ответа: </label>
-
                 @{
-                    var count = int.Parse(AnswersCount);
+                    var count = int.Parse(_answersCount);
 
                     for (int i = 0; i < count; i++)
                     {
@@ -69,28 +75,96 @@
                 Является последним вопросом в тесте
             </label>
         </div>
+
+        <div class="form-group drag-drop-zone">
+            <InputFile OnChange="HandleFile" />
+            @_status
+        </div>
+
+        @if (!string.IsNullOrEmpty(_imageName))
+        {
+            <img src="images/testQuestions/@_imageName" alt="img"/>
+        }
+
         <div class="form-group">
             <button @onclick="OnNextTestQuestionCreation" class="btn btn-primary">Далее</button>
         </div>
     </EditForm>
 
 @code {
+
     [Parameter]
     public TestQuestionCreateViewModel QuestionModel { get; set; }
 
-    private string AnswersCount { get; set; } = "1";
+    private const string DefaultStatus = "Загрузить изображение";
+    private readonly HttpClient _client = new HttpClient {BaseAddress = new Uri("https://localhost:5001/")};
+    private string _imageName;
+    private string _answersCount = "1";
+    private string _status = DefaultStatus;
 
     private async Task OnNextTestQuestionCreation()
     {
         var model = JsonConvert.SerializeObject(QuestionModel);
         var content = new StringContent(model, Encoding.UTF8, "application/json");
-        var client = new HttpClient {BaseAddress = new Uri("https://localhost:5001/")};
-        var response = await client.PostAsync("api/TestQuestion/next", content);
+        var response = await _client.PostAsync("api/TestQuestion/next", content);
         var responseResult = await response.Content.ReadAsStringAsync();
 
-        NavigationManager.NavigateTo(QuestionModel.TestQuestion.IsLastQuestion 
-            ? "https://localhost:5001/Admin/Tests" 
-            : $"api/TestQuestion?testId={QuestionModel.TestQuestion.TestId}", 
+        NavigationManager.NavigateTo(QuestionModel.TestQuestion.IsLastQuestion
+            ? "Admin/Tests"
+            : $"api/TestQuestion?testId={QuestionModel.TestQuestion.TestId}",
             true);
+    }
+
+    private async Task HandleFile(IFileListEntry[] files)
+    {
+        var file = files.FirstOrDefault();
+
+        if (file != null)
+        {
+            if (IsImage(file))
+            {
+                await ClearQuestionImage();
+
+                var stream = new MemoryStream();
+                await file.Data.CopyToAsync(stream);
+                var imageContent = new MultipartFormDataContent
+                {
+                    {new ByteArrayContent(stream.GetBuffer()), file.Name, file.Name}
+                };
+
+                var imageResponse = await _client.PostAsync("api/TestQuestion/uploadImg", imageContent);
+                _imageName = await imageResponse.Content.ReadAsStringAsync();
+
+                QuestionModel.Image = _imageName;
+                _status = file.Name;
+            }
+            else
+            {
+                _imageName = "";
+                _status = "Данный формат изображений не поддерживается! Выберите другое изображение";
+            }
+
+        }
+    }
+
+    private bool IsImage(IFileListEntry file)
+    {
+        var ext = Path.GetExtension(file.Name);
+        return string.Compare(ext, ".png", StringComparison.Ordinal) == 0 ||
+               string.Compare(ext, ".jpeg", StringComparison.Ordinal) == 0 ||
+               string.Compare(ext, ".jpg", StringComparison.Ordinal) == 0;
+    }
+
+    private async Task ClearQuestionImage()
+    {
+        if (!string.IsNullOrEmpty(_imageName))
+        {
+            var content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("fileName", _imageName)
+            });
+
+            await _client.PostAsync("api/TestQuestion/clearImg", content);
+        }
     }
 }

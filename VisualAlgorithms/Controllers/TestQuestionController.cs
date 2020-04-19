@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using VisualAlgorithms.Models;
 using VisualAlgorithms.ViewModels;
 
@@ -14,20 +18,19 @@ namespace VisualAlgorithms.Controllers
     public class TestQuestionController : Controller
     {
         private readonly ApplicationContext _db;
+        private readonly IWebHostEnvironment _env;
 
-        public TestQuestionController(ApplicationContext db)
+        public TestQuestionController(ApplicationContext db, IWebHostEnvironment env)
         {
             _db = db;
-
-            ViewBag.SelectAnswer = TestQuestionType.SelectAnswer;
-            ViewBag.FreeAnswer = TestQuestionType.FreeAnswer;
+            _env = env;
         }
 
         [Authorize(Roles = "admin")]
         [HttpGet]
         public IActionResult Create(int testId)
         {
-            var testQuestion = new TestQuestion { TestId = testId };
+            var testQuestion = new TestQuestion {TestId = testId};
             var testAnswers = new List<TestAnswer>();
 
             for (int i = 0; i < 10; i++)
@@ -46,7 +49,7 @@ namespace VisualAlgorithms.Controllers
         [Route("next")]
         public async Task<bool> OnNextQuestionCreation(TestQuestionCreateViewModel questionModel)
         {
-            var testQuestionId = await AddQuestion(questionModel.TestQuestion);
+            var testQuestionId = await AddQuestion(questionModel.TestQuestion, questionModel.Image);
             await AddQuestionAnswers(testQuestionId, questionModel.TestAnswers);
 
             if (questionModel.TestQuestion.IsLastQuestion)
@@ -55,8 +58,40 @@ namespace VisualAlgorithms.Controllers
             return false;
         }
 
-        private async Task<int> AddQuestion(TestQuestion testQuestion)
+        [HttpPost]
+        [Route("uploadImg")]
+        public async Task<string> OnQuestionImageUploading()
         {
+            var file = HttpContext.Request.Form.Files.FirstOrDefault();
+
+            if (file != null)
+            {
+                var ext = Path.GetExtension(file.Name);
+                var fileName = $"{Guid.NewGuid().ToString()}{ext}";
+                var path = Path.Combine(_env.WebRootPath, "images", "testQuestions", fileName);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                return fileName;
+            }
+
+            return null;
+        }
+
+        [HttpPost]
+        [Route("clearImg")]
+        public void ClearQuestionImage([FromForm] string fileName)
+        {
+            var path = Path.Combine(_env.WebRootPath, "images", "testQuestions", fileName);
+            System.IO.File.Delete(path);
+        }
+
+        private async Task<int> AddQuestion(TestQuestion testQuestion, string image)
+        {
+            testQuestion.Image = image;
             var result = await _db.TestQuestions.AddAsync(testQuestion);
             await _db.SaveChangesAsync();
 

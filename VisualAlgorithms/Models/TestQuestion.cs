@@ -8,6 +8,7 @@ namespace VisualAlgorithms.Models
         public string Question { get; set; }
         public TestQuestionType TestQuestionType { get; set; }
         public int CorrectAnswerId { get; set; }
+        public string Image { get; set; }
         public bool IsLastQuestion { get; set; }
         public int TestId { get; set; }
 

@@ -11,3 +11,37 @@
 .card-body-btn {
     width: 135px;
 }
+
+.drag-drop-zone {
+    border: 3px dashed #1E90FF;
+    padding: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eee;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+    color: #aeaeae;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin: 1.5rem 0 2rem 0;
+    position: relative;
+}
+
+.drag-drop-zone:hover {
+    background-color: #f5f5f5;
+}
+
+.drag-drop-zone input[type=file] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+pre {
+    background-color: #f0f0f0;
+    overflow: auto;
+    padding: 1rem;
+    height: 10rem;
+}
