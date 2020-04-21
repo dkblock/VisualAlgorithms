@@ -68,7 +68,7 @@ namespace VisualAlgorithms.Controllers
             {
                 var ext = Path.GetExtension(file.Name);
                 var fileName = $"{Guid.NewGuid().ToString()}{ext}";
-                var path = Path.Combine(_env.WebRootPath, "images", "testQuestions", fileName);
+                var path = Path.Combine(_env.WebRootPath, "images", "test-questions", fileName);
 
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
@@ -85,7 +85,7 @@ namespace VisualAlgorithms.Controllers
         [Route("clearImg")]
         public void ClearQuestionImage([FromForm] string fileName)
         {
-            var path = Path.Combine(_env.WebRootPath, "images", "testQuestions", fileName);
+            var path = Path.Combine(_env.WebRootPath, "images", "test-questions", fileName);
             System.IO.File.Delete(path);
         }
 

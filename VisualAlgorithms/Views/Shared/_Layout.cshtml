@@ -26,6 +26,9 @@
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Algorithms" asp-action="Index">Алгоритмы</a>
                         </li>
                         <li class="nav-item">
@@ -51,8 +54,8 @@
     </div>
 </footer>
 
-<script src="_framework/blazor.server.js"></script>
-<script src="_content/BlazorInputFile/inputfile.js"></script>
+@*<script src="_framework/blazor.server.js"></script>
+<script src="_content/BlazorInputFile/inputfile.js"></script>*@
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
