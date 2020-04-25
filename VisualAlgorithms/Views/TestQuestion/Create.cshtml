@@ -1,19 +1,15 @@
-﻿@using VisualAlgorithms.Components
-@model VisualAlgorithms.ViewModels.TestQuestionCreateViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@using VisualAlgorithms.Components
+@model VisualAlgorithms.ViewModels.TestQuestionViewModel
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Добавление вопроса";
+    Model.UserId = UserManager.GetUserId(User);
 }
 
-<h1>Create</h1>
-
-<h4>InfoQuestion</h4>
-<hr/>
-<div class="row">
-    <div class="col-md-4">
-        @(await Html.RenderComponentAsync<TestQuestionCreateComponent>(RenderMode.ServerPrerendered, new { QuestionModel = Model }))
-    </div>
-</div>
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<h4>Добавление вопроса</h4>
+<hr />
+@(await Html.RenderComponentAsync<TestQuestionCreateComponent>(RenderMode.ServerPrerendered, new { QuestionModel = Model }))

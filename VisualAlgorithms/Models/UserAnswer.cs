@@ -1,8 +1,12 @@
-﻿namespace VisualAlgorithms.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VisualAlgorithms.Models
 {
     public class UserAnswer
     {
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "Нет ответа!")]
         public string Answer { get; set; }
         public bool IsCorrect { get; set; }
         public int TestQuestionId { get; set; }

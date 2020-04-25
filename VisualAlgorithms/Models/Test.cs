@@ -13,7 +13,7 @@ namespace VisualAlgorithms.Models
         public int AlgorithmId { get; set; }
 
         public Algorithm Algorithm { get; set; }
-        public IEnumerable<TestQuestion> TestQuestions { get; set; }
-        public IEnumerable<UserTest> UserTests { get; set; }
+        public List<TestQuestion> TestQuestions { get; set; }
+        public List<UserTest> UserTests { get; set; }
     }
 }

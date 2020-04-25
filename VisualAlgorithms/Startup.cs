@@ -26,6 +26,7 @@ namespace VisualAlgorithms
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
+            services.AddScoped<AccessManager, AccessManager>();
             services.AddScoped<TestsManager, TestsManager>();
         }
 
@@ -41,8 +42,10 @@ namespace VisualAlgorithms
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}"
+                    );
+
                 endpoints.MapRazorPages();
                 endpoints.MapBlazorHub();
             });

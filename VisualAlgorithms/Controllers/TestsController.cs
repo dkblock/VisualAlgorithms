@@ -58,6 +58,22 @@ namespace VisualAlgorithms.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "admin")]
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            ViewBag.Algorithms = await _db.Algorithms.ToListAsync();
+            var test = await _db.Tests
+                .Include(t => t.TestQuestions)
+                .Where(t => t.Id == id)
+                .SingleOrDefaultAsync();
+
+            if (test == null)
+                return RedirectToAction("Index");
+
+            return View(test);
+        }
+
         public async Task<IActionResult> Info(int id)
         {
             var test = await _db.Tests
@@ -100,15 +116,23 @@ namespace VisualAlgorithms.Controllers
 
         [Authorize(Roles = "admin, user")]
         [HttpPost]
-        public async Task<IActionResult> OnNextQuestionPassing(UserAnswer userAnswer)
+        public async Task<IActionResult> Passing(UserAnswer userAnswer)
         {
-            userAnswer.UserId = GetUserId();
-            await _testsManager.ProcessUserAnswer(userAnswer);
-
+            var userId = GetUserId();
             var question = await _db.TestQuestions
                 .Include(q => q.Test)
                 .ThenInclude(t => t.TestQuestions)
                 .SingleAsync(q => q.Id == userAnswer.TestQuestionId);
+
+            userAnswer.UserId = userId;
+            await _testsManager.ProcessUserAnswer(userAnswer);
+
+            if (question.IsLastQuestion)
+            {
+                var result = await _testsManager.GetUserTestResult(userAnswer);
+                return RedirectToAction("Result", new { testId = result.TestId, userId = result.UserId });
+            }
+
             var test = question.Test;
             var nextQuestion = test.TestQuestions
                 .OrderBy(tq => tq.Id)
@@ -117,17 +141,6 @@ namespace VisualAlgorithms.Controllers
                 .First();
 
             return RedirectToAction("Passing", new { testId = test.Id, questionId = nextQuestion.Id });
-        }
-
-        [Authorize(Roles = "admin, user")]
-        [HttpPost]
-        public async Task<IActionResult> OnEndTestPassing(UserAnswer userAnswer)
-        {
-            userAnswer.UserId = GetUserId();
-            await _testsManager.ProcessUserAnswer(userAnswer);
-            var result = await _testsManager.GetUserTestResult(userAnswer);
-
-            return RedirectToAction("Result", new { testId = result.TestId, userId = result.UserId });
         }
 
         [Authorize(Roles = "admin, user")]

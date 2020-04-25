@@ -12,13 +12,14 @@
 
 @inject NavigationManager NavigationManager
 
-    <EditForm Model="QuestionModel">
-        <DataAnnotationsValidator />
+<div class="question-container">
+    <EditForm Model="QuestionModel" Class="col-md-6">
+        <DataAnnotationsValidator/>
 
         <div class="form-group">
             <label for="question">Вопрос: </label>
-            <InputTextArea Id="question" Class="form-control" @bind-Value="QuestionModel.TestQuestion.Question" />
-            <ValidationMessage For="@(() => QuestionModel.TestQuestion.Question)" />
+            <InputTextArea Id="question" Class="form-control" @bind-Value="QuestionModel.TestQuestion.Question"/>
+            <ValidationMessage For="@(() => QuestionModel.TestQuestion.Question)"/>
         </div>
 
         <div class="form-group">
@@ -27,13 +28,13 @@
                 <option value="@TestQuestionType.FreeAnswer">Со свободным ответом</option>
                 <option value="@TestQuestionType.SelectAnswer">С выбором ответа</option>
             </InputSelect>
-            <ValidationMessage For="@(() => QuestionModel.TestQuestion.TestQuestionType)" />
+            <ValidationMessage For="@(() => QuestionModel.TestQuestion.TestQuestionType)"/>
         </div>
 
         <div class="form-group">
             <label for="answer">Правильный ответ: </label>
-            <InputText Id="answer" Class="form-control" @bind-Value="QuestionModel.TestAnswers[0].Answer" />
-            <ValidationMessage For="@(() => QuestionModel.TestAnswers[0].Answer)" />
+            <InputText Id="answer" Class="form-control" @bind-Value="QuestionModel.TestAnswers[0].Answer"/>
+            <ValidationMessage For="@(() => QuestionModel.TestAnswers[0].Answer)"/>
         </div>
 
         @if (QuestionModel.TestQuestion.TestQuestionType == TestQuestionType.SelectAnswer)
@@ -42,10 +43,10 @@
                 <label for="answersCount">Вариантов ответа: </label>
                 <InputSelect Id="answerCount" Class="form-control" @bind-Value="_answersCount">
                     @for (int i = 1; i < 10; i++)
-                        {
-                            var num = $"{i}";
+                    {
+                        var num = $"{i}";
                         <option value="@num">@num</option>
-                        }
+                    }
                     /**/
                     /**/
                 </InputSelect>
@@ -61,8 +62,8 @@
                         var num = i + 1;
                         var labelName = $"answer{num}";
                         <div class="form-group">
-                            <InputText Id="labelName" Class="form-control" @bind-Value="QuestionModel.TestAnswers[num].Answer" />
-                            <ValidationMessage For="@(() => QuestionModel.TestAnswers[num].Answer)" />
+                            <InputText Id="labelName" Class="form-control" @bind-Value="QuestionModel.TestAnswers[num].Answer"/>
+                            <ValidationMessage For="@(() => QuestionModel.TestAnswers[num].Answer)"/>
                         </div>
                     }
                 }
@@ -71,30 +72,33 @@
 
         <div class="form-group">
             <label for="isLastQuestion">
-                <InputCheckbox Id="isLastQuestion" @bind-Value="QuestionModel.TestQuestion.IsLastQuestion" />
+                <InputCheckbox Id="isLastQuestion" @bind-Value="QuestionModel.TestQuestion.IsLastQuestion"/>
                 Является последним вопросом в тесте
             </label>
         </div>
-
-        <div class="form-group drag-drop-zone">
-            <InputFile OnChange="HandleFile" />
-            @_status
-        </div>
-
-        @if (!string.IsNullOrEmpty(_imageName))
-        {
-            <img src="images/testQuestions/@_imageName" alt="img"/>
-        }
 
         <div class="form-group">
             <button @onclick="OnNextTestQuestionCreation" class="btn btn-primary">Далее</button>
         </div>
     </EditForm>
 
+    <div class="col-md-6 question-img-container">
+        @if (!string.IsNullOrEmpty(_imageName))
+        {
+            <img class="test-img-bordered" src="images/test-questions/@_imageName" alt="img" />
+        }
+
+        <div class="drag-drop-zone text-center">
+            <InputFile OnChange="HandleFile" />
+            @_status
+        </div>
+    </div>
+</div>
+
 @code {
 
     [Parameter]
-    public TestQuestionCreateViewModel QuestionModel { get; set; }
+    public TestQuestionViewModel QuestionModel { get; set; }
 
     private const string DefaultStatus = "Загрузить изображение";
     private readonly HttpClient _client = new HttpClient {BaseAddress = new Uri("https://localhost:5001/")};
@@ -106,12 +110,12 @@
     {
         var model = JsonConvert.SerializeObject(QuestionModel);
         var content = new StringContent(model, Encoding.UTF8, "application/json");
-        var response = await _client.PostAsync("api/TestQuestion/next", content);
+        var response = await _client.PostAsync("api/tests/next", content);
         var responseResult = await response.Content.ReadAsStringAsync();
 
         NavigationManager.NavigateTo(QuestionModel.TestQuestion.IsLastQuestion
             ? "Admin/Tests"
-            : $"api/TestQuestion?testId={QuestionModel.TestQuestion.TestId}",
+            : $"TestQuestion?testId={QuestionModel.TestQuestion.TestId}",
             true);
     }
 
@@ -121,10 +125,10 @@
 
         if (file != null)
         {
+            await ClearQuestionImage();
+
             if (IsImage(file))
             {
-                await ClearQuestionImage();
-
                 var stream = new MemoryStream();
                 await file.Data.CopyToAsync(stream);
                 var imageContent = new MultipartFormDataContent
@@ -132,18 +136,17 @@
                     {new ByteArrayContent(stream.GetBuffer()), file.Name, file.Name}
                 };
 
-                var imageResponse = await _client.PostAsync("api/TestQuestion/uploadImg", imageContent);
+                var imageResponse = await _client.PostAsync("api/tests/uploadImg", imageContent);
                 _imageName = await imageResponse.Content.ReadAsStringAsync();
 
                 QuestionModel.Image = _imageName;
-                _status = file.Name;
+                _status = "Загрузить другое изображение";
             }
             else
             {
-                _imageName = "";
-                _status = "Данный формат изображений не поддерживается! Выберите другое изображение";
+                _imageName = string.Empty;
+                _status = "Данный формат не поддерживается! Выберите другое изображение";
             }
-
         }
     }
 
@@ -164,7 +167,8 @@
                 new KeyValuePair<string, string>("fileName", _imageName)
             });
 
-            await _client.PostAsync("api/TestQuestion/clearImg", content);
+            await _client.PostAsync("api/tests/clearImg", content);
         }
     }
+
 }

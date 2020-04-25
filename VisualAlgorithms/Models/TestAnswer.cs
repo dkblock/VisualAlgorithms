@@ -1,4 +1,6 @@
-﻿namespace VisualAlgorithms.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VisualAlgorithms.Models
 {
     public class TestAnswer
     {

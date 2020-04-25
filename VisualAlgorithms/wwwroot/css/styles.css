@@ -13,15 +13,14 @@
 }
 
 .drag-drop-zone {
-    border: 3px dashed #1E90FF;
-    padding: 3rem;
+    border: 2px dashed #1E90FF;
+    padding: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #eee;
-    box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
     color: #aeaeae;
-    font-size: 1.5rem;
+    font-size: 20px;
     cursor: pointer;
     margin: 1.5rem 0 2rem 0;
     position: relative;
@@ -49,11 +48,11 @@ pre {
 .home-carousel {
     width: 100%;
     margin: 0 auto;
-    border-radius: 10px;
+    border-radius: 0.25rem;
 }
 
 .home-carousel-img {
-    border-radius: 10px;
+    border-radius: 0.25rem;
     filter: brightness(50%);
 }
 
@@ -61,4 +60,34 @@ pre {
     border-radius: 50%;
     width: 10px;
     height: 10px;
+}
+
+.unselectable {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.test-img-bordered {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    max-width: 100%;
+    min-width: 50%;
+    margin: auto;
+}
+
+.question-container {
+    display: flex;
+    justify-content: space-between
+}
+
+.question-img-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.question-form {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
 }
