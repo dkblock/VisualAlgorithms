@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,19 +42,27 @@ namespace VisualAlgorithms.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var testQuestion = await _db.TestQuestions
-                .Include(tq => tq.TestAnswers)
-                .SingleOrDefaultAsync(tq => tq.Id == id);
+            var testQuestion = await _db.TestQuestions.FindAsync(id);
 
             if (testQuestion == null)
                 return RedirectToAction("Tests", "Admin");
 
+            var testAnswers = await _db.TestAnswers
+                .Where(ta => ta.TestQuestionId == id)
+                .ToListAsync();
+            var answersCount = testAnswers.Count;
+
+            for (var i = 0; i < 10 - answersCount; i++)
+                testAnswers.Add(new TestAnswer());
+
             var questionModel = new TestQuestionViewModel
             {
                 TestQuestion = testQuestion,
-                TestAnswers = testQuestion.TestAnswers,
+                TestAnswers = testAnswers,
                 Image = testQuestion.Image
             };
+
+            questionModel.TestQuestion.TestAnswers = new List<TestAnswer>();
 
             return View(questionModel);
         }

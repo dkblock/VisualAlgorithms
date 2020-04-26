@@ -28,24 +28,126 @@ namespace VisualAlgorithms.Controllers
         }
 
         [HttpPost]
-        [Route("next")]
-        public async Task<bool> OnNextQuestionCreation(TestQuestionViewModel questionModel)
+        [Route("createQuestion")]
+        public async Task<bool> CreateTestQuestion(TestQuestionViewModel questionModel)
         {
             if (!await _accessManager.HasAdminAccess(questionModel.UserId))
                 return false;
 
-            var testQuestionId = await AddQuestion(questionModel.TestQuestion, questionModel.Image);
-            await AddQuestionAnswers(testQuestionId, questionModel.TestAnswers);
+            var testQuestionId = await AddTestQuestion(questionModel.TestQuestion, questionModel.Image);
+            var correctAnswerId = await AddTestQuestionAnswers(testQuestionId, questionModel.TestAnswers);
+            var testQuestion = await _db.TestQuestions.FindAsync(testQuestionId);
 
-            if (questionModel.TestQuestion.IsLastQuestion)
-                return true;
+            testQuestion.CorrectAnswerId = correctAnswerId;
+            _db.Entry(testQuestion).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
 
-            return false;
+            return questionModel.TestQuestion.IsLastQuestion;
+        }
+
+        private async Task<int> AddTestQuestion(TestQuestion testQuestion, string image)
+        {
+            testQuestion.Image = image;
+            var result = await _db.TestQuestions.AddAsync(testQuestion);
+            await _db.SaveChangesAsync();
+
+            return result.Entity.Id;
+        }
+
+        private async Task<int> AddTestQuestionAnswers(int questionId, List<TestAnswer> testAnswers)
+        {
+            testAnswers.RemoveAll(ta => ta.Answer == null);
+
+            foreach (var answer in testAnswers)
+                answer.TestQuestionId = questionId;
+
+            var result = await _db.TestAnswers.AddAsync(testAnswers.First());
+            await _db.SaveChangesAsync();
+            var correctAnswerId = result.Entity.Id;
+
+            if (testAnswers.Count > 1)
+            {
+                for (var i = 1; i < testAnswers.Count; i++)
+                    await _db.TestAnswers.AddAsync(testAnswers[i]);
+            }
+
+            await _db.SaveChangesAsync();
+
+            return correctAnswerId;
+        }
+
+        [HttpPost]
+        [Route("editQuestion")]
+        public async Task<bool> EditTestQuestion(TestQuestionViewModel questionModel)
+        {
+            if (!await _accessManager.HasAdminAccess(questionModel.UserId))
+                return false;
+
+            await EditTestQuestionAnswers(questionModel.TestQuestion.Id, questionModel.TestAnswers);
+            await EditTestQuestion(questionModel.TestQuestion, questionModel.Image);
+
+            return true;
+        }
+
+        private async Task EditTestQuestion(TestQuestion newQuestion, string image)
+        {
+            var testQuestion = await _db.TestQuestions.FindAsync(newQuestion.Id);
+            testQuestion.Question = newQuestion.Question;
+            testQuestion.TestQuestionType = newQuestion.TestQuestionType;
+            testQuestion.Image = image;
+            testQuestion.CorrectAnswerId = newQuestion.CorrectAnswerId;
+            testQuestion.IsLastQuestion = false;
+
+            _db.Entry(testQuestion).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+        }
+
+        private async Task EditTestQuestionAnswers(int questionId, List<TestAnswer> newAnswers)
+        {
+            newAnswers.RemoveAll(ta => ta.Answer == null);
+            var testAnswers = await _db.TestAnswers
+                .Where(ta => ta.TestQuestionId == questionId)
+                .ToListAsync();
+
+            var answersToUpdate = newAnswers.Select(na => na.Id).Intersect(testAnswers.Select(ta => ta.Id)).ToList();
+            var answersToAdd = newAnswers.Where(na => na.Id == 0).ToList();
+            var answersToRemove = testAnswers.Select(na => na.Id).Except(newAnswers.Select(ta => ta.Id)).ToList();
+
+            await UpdateTestQuestionAnswers(newAnswers, answersToUpdate);
+
+            if (answersToAdd.Any())
+                await AddTestQuestionAnswers(questionId, answersToAdd);
+
+            if (answersToRemove.Any())
+                await RemoveTestQuestionAnswers(answersToRemove);
+        }
+
+        private async Task UpdateTestQuestionAnswers(List<TestAnswer> newAnswers, IEnumerable<int> answersToUpdate)
+        {
+            foreach (var answerId in answersToUpdate)
+            {
+                var answer = await _db.TestAnswers.FindAsync(answerId);
+                answer.Answer = newAnswers.Single(na => na.Id == answerId).Answer;
+                _db.Entry(answer).State = EntityState.Modified;
+            }
+
+            await _db.SaveChangesAsync();
+        }
+
+        private async Task RemoveTestQuestionAnswers(IEnumerable<int> answersToRemove)
+        {
+            foreach (var answerId in answersToRemove)
+            {
+                var answer = await _db.TestAnswers.FindAsync(answerId);
+                _db.TestAnswers.Remove(answer);
+            }
+
+            await _db.SaveChangesAsync();
         }
 
         [HttpPost]
         [Route("uploadImg")]
-        public async Task<string> OnQuestionImageUploading()
+        public async Task<string> UploadTestQuestionImage()
         {
             var file = HttpContext.Request.Form.Files.FirstOrDefault();
 
@@ -68,43 +170,10 @@ namespace VisualAlgorithms.Controllers
 
         [HttpPost]
         [Route("clearImg")]
-        public void ClearQuestionImage([FromForm] string fileName)
+        public void ClearTestQuestionImage([FromForm] string fileName)
         {
             var path = Path.Combine(_env.WebRootPath, "images", "test-questions", fileName);
             System.IO.File.Delete(path);
-        }
-
-        private async Task<int> AddQuestion(TestQuestion testQuestion, string image)
-        {
-            testQuestion.Image = image;
-            var result = await _db.TestQuestions.AddAsync(testQuestion);
-            await _db.SaveChangesAsync();
-
-            return result.Entity.Id;
-        }
-
-        private async Task AddQuestionAnswers(int questionId, List<TestAnswer> testAnswers)
-        {
-            testAnswers.RemoveAll(a => a.Answer == null);
-
-            foreach (var answer in testAnswers)
-                answer.TestQuestionId = questionId;
-
-            var result = await _db.TestAnswers.AddAsync(testAnswers.First());
-            await _db.SaveChangesAsync();
-
-            var correctAnswerId = result.Entity.Id;
-            var testQuestion = await _db.TestQuestions.FindAsync(questionId);
-            testQuestion.CorrectAnswerId = correctAnswerId;
-            _db.Entry(testQuestion).State = EntityState.Modified;
-
-            if (testAnswers.Count > 1)
-            {
-                for (int i = 1; i < testAnswers.Count; i++)
-                    await _db.TestAnswers.AddAsync(testAnswers[i]);
-            }
-
-            await _db.SaveChangesAsync();
         }
     }
 }

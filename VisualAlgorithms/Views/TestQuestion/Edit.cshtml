@@ -1,0 +1,16 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using VisualAlgorithms.Components
+@model VisualAlgorithms.ViewModels.TestQuestionViewModel
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Изменение вопроса";
+    Model.UserId = UserManager.GetUserId(User);
+}
+
+<h4>Добавление вопроса</h4>
+<hr />
+@(await Html.RenderComponentAsync<TestQuestionEditComponent>(RenderMode.ServerPrerendered, new { QuestionModel = Model }))
+

@@ -22,9 +22,9 @@ namespace VisualAlgorithms
             var connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>();
-            services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddControllersWithViews();
 
             services.AddScoped<AccessManager, AccessManager>();
             services.AddScoped<TestsManager, TestsManager>();

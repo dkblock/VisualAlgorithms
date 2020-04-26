@@ -14,12 +14,12 @@
 
 <div class="question-container">
     <EditForm Model="QuestionModel" Class="col-md-6">
-        <DataAnnotationsValidator/>
+        <DataAnnotationsValidator />
 
         <div class="form-group">
             <label for="question">Вопрос: </label>
-            <InputTextArea Id="question" Class="form-control" @bind-Value="QuestionModel.TestQuestion.Question"/>
-            <ValidationMessage For="@(() => QuestionModel.TestQuestion.Question)"/>
+            <InputTextArea Id="question" Class="form-control" @bind-Value="QuestionModel.TestQuestion.Question" />
+            <ValidationMessage For="@(() => QuestionModel.TestQuestion.Question)" />
         </div>
 
         <div class="form-group">
@@ -28,13 +28,13 @@
                 <option value="@TestQuestionType.FreeAnswer">Со свободным ответом</option>
                 <option value="@TestQuestionType.SelectAnswer">С выбором ответа</option>
             </InputSelect>
-            <ValidationMessage For="@(() => QuestionModel.TestQuestion.TestQuestionType)"/>
+            <ValidationMessage For="@(() => QuestionModel.TestQuestion.TestQuestionType)" />
         </div>
 
         <div class="form-group">
             <label for="answer">Правильный ответ: </label>
-            <InputText Id="answer" Class="form-control" @bind-Value="QuestionModel.TestAnswers[0].Answer"/>
-            <ValidationMessage For="@(() => QuestionModel.TestAnswers[0].Answer)"/>
+            <InputText Id="answer" Class="form-control" @bind-Value="QuestionModel.TestAnswers[0].Answer" />
+            <ValidationMessage For="@(() => QuestionModel.TestAnswers[0].Answer)" />
         </div>
 
         @if (QuestionModel.TestQuestion.TestQuestionType == TestQuestionType.SelectAnswer)
@@ -43,10 +43,11 @@
                 <label for="answersCount">Вариантов ответа: </label>
                 <InputSelect Id="answerCount" Class="form-control" @bind-Value="_answersCount">
                     @for (int i = 1; i < 10; i++)
-                    {
-                        var num = $"{i}";
+                        {
+                            var num = $"{i}";
                         <option value="@num">@num</option>
-                    }
+                        }
+                    /**/
                     /**/
                     /**/
                 </InputSelect>
@@ -62,8 +63,8 @@
                         var num = i + 1;
                         var labelName = $"answer{num}";
                         <div class="form-group">
-                            <InputText Id="labelName" Class="form-control" @bind-Value="QuestionModel.TestAnswers[num].Answer"/>
-                            <ValidationMessage For="@(() => QuestionModel.TestAnswers[num].Answer)"/>
+                            <InputText Id="labelName" Class="form-control" @bind-Value="QuestionModel.TestAnswers[num].Answer" />
+                            <ValidationMessage For="@(() => QuestionModel.TestAnswers[num].Answer)" />
                         </div>
                     }
                 }
@@ -71,14 +72,8 @@
         }
 
         <div class="form-group">
-            <label for="isLastQuestion">
-                <InputCheckbox Id="isLastQuestion" @bind-Value="QuestionModel.TestQuestion.IsLastQuestion"/>
-                Является последним вопросом в тесте
-            </label>
-        </div>
-
-        <div class="form-group">
-            <button @onclick="CreateTestQuestion" class="btn btn-primary">Далее</button>
+            <button @onclick="EditTestQuestion" class="btn btn-primary">Готово</button>
+            <button @onclick="DeleteTestQuestion" class="btn btn-danger">Удалить вопрос</button>
         </div>
     </EditForm>
 
@@ -101,12 +96,19 @@
     public TestQuestionViewModel QuestionModel { get; set; }
 
     private const string DefaultStatus = "Загрузить изображение";
-    private readonly HttpClient _client = new HttpClient {BaseAddress = new Uri("https://localhost:5001/")};
+    private readonly HttpClient _client = new HttpClient { BaseAddress = new Uri("https://localhost:5001/") };
     private string _imageName;
     private string _answersCount = "1";
     private string _status = DefaultStatus;
 
-    private async Task CreateTestQuestion()
+    protected override void OnInitialized()
+    {
+        _imageName = QuestionModel.Image;
+        _status = _imageName == null ? DefaultStatus : "Загрузить другое изображение";
+        _answersCount = (QuestionModel.TestAnswers.Count(ta => !string.IsNullOrEmpty(ta.Answer)) - 1).ToString();
+    }
+
+    private async Task EditTestQuestion()
     {
         if (QuestionModel.TestQuestion.TestQuestionType == TestQuestionType.FreeAnswer)
             HandleAnswers(1);
@@ -115,12 +117,24 @@
 
         var model = JsonConvert.SerializeObject(QuestionModel);
         var content = new StringContent(model, Encoding.UTF8, "application/json");
-        var response = await _client.PostAsync("api/tests/createQuestion", content);
+        var response = await _client.PostAsync("api/tests/editQuestion", content);
         var responseResult = await response.Content.ReadAsStringAsync();
+        var isSuccessed = JsonConvert.DeserializeObject<bool>(responseResult);
+
+        if (isSuccessed)
+            NavigationManager.NavigateTo($"Tests/Edit/{QuestionModel.TestQuestion.TestId}", true);
+    }
+
+    private async Task DeleteTestQuestion()
+    {
+        var model = JsonConvert.SerializeObject(QuestionModel);
+        var content = new StringContent(model, Encoding.UTF8, "application/json");
+        var response = await _client.PostAsync("api/tests/deleteQuestion", content);
+        var isSuccessed = await response.Content.ReadAsStringAsync();
 
         NavigationManager.NavigateTo(QuestionModel.TestQuestion.IsLastQuestion
             ? "Admin/Tests"
-            : $"TestQuestion/Create?testId={QuestionModel.TestQuestion.TestId}",
+            : $"TestQuestion?testId={QuestionModel.TestQuestion.TestId}",
             true);
     }
 
@@ -143,7 +157,7 @@
                 var stream = new MemoryStream();
                 await file.Data.CopyToAsync(stream);
                 var imageContent = new MultipartFormDataContent
-                {
+            {
                     {new ByteArrayContent(stream.GetBuffer()), file.Name, file.Name}
                 };
 
@@ -161,6 +175,14 @@
         }
     }
 
+    private bool IsImage(IFileListEntry file)
+    {
+        var ext = Path.GetExtension(file.Name);
+        return string.Compare(ext, ".png", StringComparison.Ordinal) == 0 ||
+               string.Compare(ext, ".jpeg", StringComparison.Ordinal) == 0 ||
+               string.Compare(ext, ".jpg", StringComparison.Ordinal) == 0;
+    }
+
     private async Task ClearQuestionImage()
     {
         if (!string.IsNullOrEmpty(_imageName))
@@ -174,11 +196,4 @@
         }
     }
 
-    private bool IsImage(IFileListEntry file)
-    {
-        var ext = Path.GetExtension(file.Name);
-        return string.Compare(ext, ".png", StringComparison.Ordinal) == 0 ||
-               string.Compare(ext, ".jpeg", StringComparison.Ordinal) == 0 ||
-               string.Compare(ext, ".jpg", StringComparison.Ordinal) == 0;
-    }
 }
