@@ -34,7 +34,7 @@ namespace VisualAlgorithms.Controllers
             if (!await _accessManager.HasAdminAccess(questionModel.UserId))
                 return false;
 
-            var testQuestionId = await AddTestQuestion(questionModel.TestQuestion, questionModel.Image);
+            var testQuestionId = await AddTestQuestion(questionModel);
             var correctAnswerId = await AddTestQuestionAnswers(testQuestionId, questionModel.TestAnswers);
             var testQuestion = await _db.TestQuestions.FindAsync(testQuestionId);
 
@@ -45,9 +45,17 @@ namespace VisualAlgorithms.Controllers
             return questionModel.TestQuestion.IsLastQuestion;
         }
 
-        private async Task<int> AddTestQuestion(TestQuestion testQuestion, string image)
+        private async Task<int> AddTestQuestion(TestQuestionViewModel questionModel)
         {
-            testQuestion.Image = image;
+            var testQuestion = questionModel.TestQuestion;
+            testQuestion.Image = questionModel.Image;
+
+            if (!questionModel.IsNewTest)
+            {
+                await ResetLastQuestion(questionModel.TestQuestion.TestId);
+                testQuestion.IsLastQuestion = true;
+            }
+
             var result = await _db.TestQuestions.AddAsync(testQuestion);
             await _db.SaveChangesAsync();
 
@@ -76,6 +84,18 @@ namespace VisualAlgorithms.Controllers
             return correctAnswerId;
         }
 
+        private async Task ResetLastQuestion(int testId)
+        {
+            var testQuestions = await _db.TestQuestions
+                .Where(tq => tq.TestId == testId)
+                .ToListAsync();
+
+            var lastQuestion = testQuestions.Single(tq => tq.IsLastQuestion);
+            lastQuestion.IsLastQuestion = false;
+            _db.Entry(lastQuestion).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+        }
+
         [HttpPost]
         [Route("editQuestion")]
         public async Task<bool> EditTestQuestion(TestQuestionViewModel questionModel)
@@ -85,6 +105,15 @@ namespace VisualAlgorithms.Controllers
 
             await EditTestQuestionAnswers(questionModel.TestQuestion.Id, questionModel.TestAnswers);
             await EditTestQuestion(questionModel.TestQuestion, questionModel.Image);
+
+            var testQuestions = await _db.TestQuestions
+                .Where(tq => tq.TestId == questionModel.TestQuestion.TestId)
+                .ToListAsync();
+
+            var lastQuestion = testQuestions.Last();
+            lastQuestion.IsLastQuestion = true;
+            _db.Entry(lastQuestion).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
 
             return true;
         }

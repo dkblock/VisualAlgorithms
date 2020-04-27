@@ -49,6 +49,7 @@
                     }
                     /**/
                     /**/
+                    /**/
                 </InputSelect>
             </div>
 
@@ -70,12 +71,15 @@
             </div>
         }
 
-        <div class="form-group">
-            <label for="isLastQuestion">
-                <InputCheckbox Id="isLastQuestion" @bind-Value="QuestionModel.TestQuestion.IsLastQuestion"/>
-                Является последним вопросом в тесте
-            </label>
-        </div>
+        @if (QuestionModel.IsNewTest)
+        {
+            <div class="form-group">
+                <label for="isLastQuestion">
+                    <InputCheckbox Id="isLastQuestion" @bind-Value="QuestionModel.TestQuestion.IsLastQuestion"/>
+                    Является последним вопросом в тесте
+                </label>
+            </div>
+        }
 
         <div class="form-group">
             <button @onclick="CreateTestQuestion" class="btn btn-primary">Далее</button>
@@ -85,11 +89,11 @@
     <div class="col-md-6 question-img-container">
         @if (!string.IsNullOrEmpty(_imageName))
         {
-            <img class="test-img-bordered" src="images/test-questions/@_imageName" alt="img" />
+            <img class="test-img-bordered" src="images/test-questions/@_imageName" alt="img"/>
         }
 
         <div class="drag-drop-zone text-center">
-            <InputFile OnChange="HandleFile" />
+            <InputFile OnChange="HandleFile"/>
             @_status
         </div>
     </div>
@@ -118,10 +122,13 @@
         var response = await _client.PostAsync("api/tests/createQuestion", content);
         var responseResult = await response.Content.ReadAsStringAsync();
 
-        NavigationManager.NavigateTo(QuestionModel.TestQuestion.IsLastQuestion
-            ? "Admin/Tests"
-            : $"TestQuestion/Create?testId={QuestionModel.TestQuestion.TestId}",
-            true);
+        if (QuestionModel.IsNewTest)
+            NavigationManager.NavigateTo(QuestionModel.TestQuestion.IsLastQuestion
+                ? "Admin/Tests"
+                : $"TestQuestion/Create?testId={QuestionModel.TestQuestion.TestId}",
+                true);
+        else
+            NavigationManager.NavigateTo($"Tests/Edit/{QuestionModel.TestQuestion.TestId}", true);
     }
 
     private void HandleAnswers(int startIndex)
@@ -181,4 +188,5 @@
                string.Compare(ext, ".jpeg", StringComparison.Ordinal) == 0 ||
                string.Compare(ext, ".jpg", StringComparison.Ordinal) == 0;
     }
+
 }

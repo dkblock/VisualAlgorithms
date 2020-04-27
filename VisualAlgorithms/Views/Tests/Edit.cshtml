@@ -28,18 +28,24 @@
                 </select>
                 <span asp-validation-for="AlgorithmId" class="text-danger"></span>
             </div>
-            <div>
-                @for(int i=0; i< Model.TestQuestions.Count; i++)
+            <div class="form-group">
+                <a asp-controller="TestQuestion" asp-action="Create" asp-route-testId="@Model.Id" asp-route-isNewTest="false"
+                   class="btn btn-success">
+                    Добавить вопрос
+                </a>
+            </div>
+            <div class="form-group">
+                @for (int i = 0; i < Model.TestQuestions.Count; i++)
                 {
                     var question = Model.TestQuestions[i];
                     <div class="form-group">
-                        Вопрос @(i+1): @question.Question
+                        Вопрос @(i + 1): @question.Question
                     </div>
                     <a asp-controller="TestQuestion" asp-action="Edit" asp-route-id="@question.Id" class="btn btn-primary">Изменить</a>
                 }
             </div>
             <div class="form-group">
-                <input type="submit" value="Сохранить изменения" class="btn btn-primary"/>
+                <input type="submit" value="Готово" class="btn btn-primary"/>
                 <a asp-controller="Tests" asp-action="Delete" class="btn btn-danger">Удалить тест</a>
             </div>
         </form>

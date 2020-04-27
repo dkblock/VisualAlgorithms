@@ -20,7 +20,7 @@ namespace VisualAlgorithms.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpGet]
-        public IActionResult Create(int testId)
+        public IActionResult Create(int testId, bool isNewTest)
         {
             var testQuestion = new TestQuestion {TestId = testId};
             var testAnswers = new List<TestAnswer>();
@@ -28,16 +28,16 @@ namespace VisualAlgorithms.Controllers
             for (var i = 0; i < 10; i++)
                 testAnswers.Add(new TestAnswer());
 
-            var questionCreateModel = new TestQuestionViewModel
+            var questionModel = new TestQuestionViewModel
             {
                 TestQuestion = testQuestion,
-                TestAnswers = testAnswers
+                TestAnswers = testAnswers,
+                IsNewTest = isNewTest
             };
 
-            return View(questionCreateModel);
+            return View(questionModel);
         }
-
-
+        
         [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)

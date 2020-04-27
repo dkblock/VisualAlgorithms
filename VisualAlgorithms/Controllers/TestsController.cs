@@ -52,7 +52,7 @@ namespace VisualAlgorithms.Controllers
                 var result = await _db.Tests.AddAsync(test);
                 await _db.SaveChangesAsync();
 
-                return RedirectToAction("Create", "TestQuestion", new { testId = result.Entity.Id });
+                return RedirectToAction("Create", "TestQuestion", new { testId = result.Entity.Id, isNewTest = true });
             }
 
             return RedirectToAction("Index");
@@ -72,6 +72,20 @@ namespace VisualAlgorithms.Controllers
                 return RedirectToAction("Index");
 
             return View(test);
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public async Task<IActionResult> Edit(Test newTest)
+        {
+            var test = await _db.Tests.FindAsync(newTest.Id);
+            test.Name = newTest.Name;
+            test.AlgorithmId = newTest.AlgorithmId;
+
+            _db.Entry(test).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Tests", "Admin");
         }
 
         public async Task<IActionResult> Info(int id)
