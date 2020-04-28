@@ -4,16 +4,16 @@ namespace VisualAlgorithms.ViewModels
 {
     public class LoginViewModel
     {
-        [Required]
-        [Display(Name = "Логин")]
+        [Required(ErrorMessage = "Введите Email!")]
+        [Display(Name = "Email")]
         public string Username { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Введите пароль!")]
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string Password { get; set; }
 
-        [Display(Name = "Запомнить?")]
+        [Display(Name = "Запомнить")]
         public bool RememberMe { get; set; }
 
         public string ReturnUrl { get; set; }
