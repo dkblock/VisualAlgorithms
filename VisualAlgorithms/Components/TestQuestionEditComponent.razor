@@ -73,7 +73,6 @@
 
         <div class="form-group">
             <button @onclick="EditTestQuestion" class="btn btn-primary">Готово</button>
-            <button @onclick="DeleteTestQuestion" class="btn btn-danger">Удалить вопрос</button>
         </div>
     </EditForm>
 
@@ -123,19 +122,6 @@
 
         if (isSuccessed)
             NavigationManager.NavigateTo($"Tests/Edit/{QuestionModel.TestQuestion.TestId}", true);
-    }
-
-    private async Task DeleteTestQuestion()
-    {
-        var model = JsonConvert.SerializeObject(QuestionModel);
-        var content = new StringContent(model, Encoding.UTF8, "application/json");
-        var response = await _client.PostAsync("api/tests/deleteQuestion", content);
-        var isSuccessed = await response.Content.ReadAsStringAsync();
-
-        NavigationManager.NavigateTo(QuestionModel.TestQuestion.IsLastQuestion
-            ? "Admin/Tests"
-            : $"TestQuestion?testId={QuestionModel.TestQuestion.TestId}",
-            true);
     }
 
     private void HandleAnswers(int startIndex)

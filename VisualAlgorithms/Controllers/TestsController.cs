@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VisualAlgorithms.AppMiddleware;
@@ -12,15 +14,18 @@ namespace VisualAlgorithms.Controllers
     public class TestsController : Controller
     {
         private readonly ApplicationContext _db;
+        private readonly IWebHostEnvironment _env;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly TestsManager _testsManager;
 
         public TestsController(
-            ApplicationContext db, 
+            ApplicationContext db,
+            IWebHostEnvironment env,
             UserManager<ApplicationUser> userManager,
             TestsManager testsManager)
         {
             _db = db;
+            _env = env;
             _userManager = userManager;
             _testsManager = testsManager;
         }
@@ -69,7 +74,7 @@ namespace VisualAlgorithms.Controllers
                 .SingleOrDefaultAsync();
 
             if (test == null)
-                return RedirectToAction("Index");
+                return RedirectToAction("Tests", "Admin");
 
             return View(test);
         }
@@ -83,6 +88,41 @@ namespace VisualAlgorithms.Controllers
             test.AlgorithmId = newTest.AlgorithmId;
 
             _db.Entry(test).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Tests", "Admin");
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var test = await _db.Tests.FindAsync(id);
+
+            if (test == null)
+                return RedirectToAction("Tests", "Admin");
+
+            return View(test);
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public async Task<IActionResult> Delete(Test test)
+        {
+            var testQuestions = await _db.TestQuestions
+                .Where(tq => tq.TestId == test.Id)
+                .ToListAsync();
+
+            foreach (var question in testQuestions)
+            {
+                if (!string.IsNullOrEmpty(question.Image))
+                {
+                    var path = Path.Combine(_env.WebRootPath, "images", "test-questions", question.Image);
+                    System.IO.File.Delete(path);
+                }
+            }
+
+            _db.Tests.Remove(test);
             await _db.SaveChangesAsync();
 
             return RedirectToAction("Tests", "Admin");

@@ -35,18 +35,19 @@
                 </a>
             </div>
             <div class="form-group">
-                @for (int i = 0; i < Model.TestQuestions.Count; i++)
+                @for (var i = 0; i < Model.TestQuestions.Count; i++)
                 {
                     var question = Model.TestQuestions[i];
                     <div class="form-group">
                         Вопрос @(i + 1): @question.Question
                     </div>
                     <a asp-controller="TestQuestion" asp-action="Edit" asp-route-id="@question.Id" class="btn btn-primary">Изменить</a>
+                    <a asp-controller="TestQuestion" asp-action="Delete" asp-route-id="@question.Id" class="btn btn-danger">Удалить</a>
                 }
             </div>
             <div class="form-group">
                 <input type="submit" value="Готово" class="btn btn-primary"/>
-                <a asp-controller="Tests" asp-action="Delete" class="btn btn-danger">Удалить тест</a>
+                <a asp-controller="Tests" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Удалить тест</a>
             </div>
         </form>
     </div>

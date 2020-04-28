@@ -1,0 +1,24 @@
+﻿@model VisualAlgorithms.Models.TestQuestion
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>TestQuestion</h4>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Question" />
+        <input type="hidden" asp-for="TestQuestionType" />
+        <input type="hidden" asp-for="CorrectAnswerId" />
+        <input type="hidden" asp-for="Image" />
+        <input type="hidden" asp-for="IsLastQuestion" />
+        <input type="hidden" asp-for="TestId" />
+        <input type="submit" value="Удалить" class="btn btn-danger" /> |
+        <a asp-controller="Tests" asp-action="Edit" asp-route-id="@Model.TestId">Back to List</a>
+    </form>
+</div>

@@ -125,7 +125,7 @@
         if (QuestionModel.IsNewTest)
             NavigationManager.NavigateTo(QuestionModel.TestQuestion.IsLastQuestion
                 ? "Admin/Tests"
-                : $"TestQuestion/Create?testId={QuestionModel.TestQuestion.TestId}",
+                : $"TestQuestion/Create?testId={QuestionModel.TestQuestion.TestId}&isNewTest=true",
                 true);
         else
             NavigationManager.NavigateTo($"Tests/Edit/{QuestionModel.TestQuestion.TestId}", true);
