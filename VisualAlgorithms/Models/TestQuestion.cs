@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace VisualAlgorithms.Models
 {
     public class TestQuestion
     {
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "Введите вопрос!")]
         public string Question { get; set; }
         public TestQuestionType TestQuestionType { get; set; }
         public int CorrectAnswerId { get; set; }

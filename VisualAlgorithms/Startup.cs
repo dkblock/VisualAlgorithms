@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -5,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VisualAlgorithms.AppMiddleware;
 using VisualAlgorithms.Models;
+using VisualAlgorithms.ViewModels;
 
 namespace VisualAlgorithms
 {
@@ -28,6 +30,8 @@ namespace VisualAlgorithms
 
             services.AddScoped<AccessManager, AccessManager>();
             services.AddScoped<TestsManager, TestsManager>();
+            services.AddTransient<IValidator<TestQuestionViewModel>, TestQuestionViewModelValidator>();
+            services.AddTransient<IValidator<TestAnswer>, TestAnswerValidator>();
         }
 
         public void Configure(IApplicationBuilder app)

@@ -26,11 +26,12 @@ namespace VisualAlgorithms.Controllers
         [HttpGet]
         public IActionResult Create(int testId, bool isNewTest)
         {
-            var testQuestion = new TestQuestion {TestId = testId};
-            var testAnswers = new List<TestAnswer>();
-
-            for (var i = 0; i < 10; i++)
-                testAnswers.Add(new TestAnswer());
+            var testQuestion = new TestQuestion
+            {
+                TestId = testId,
+                TestQuestionType = TestQuestionType.FreeAnswer
+            };
+            var testAnswers = new List<TestAnswer> {new TestAnswer()};
 
             var questionModel = new TestQuestionViewModel
             {
@@ -54,10 +55,6 @@ namespace VisualAlgorithms.Controllers
             var testAnswers = await _db.TestAnswers
                 .Where(ta => ta.TestQuestionId == id)
                 .ToListAsync();
-            var answersCount = testAnswers.Count;
-
-            for (var i = 0; i < 10 - answersCount; i++)
-                testAnswers.Add(new TestAnswer());
 
             var questionModel = new TestQuestionViewModel
             {
@@ -104,7 +101,7 @@ namespace VisualAlgorithms.Controllers
                 await _db.SaveChangesAsync();
             }
 
-            return RedirectToAction("Edit", "Tests", new { id = testQuestion.TestId });
+            return RedirectToAction("Edit", "Tests", new {id = testQuestion.TestId});
         }
     }
 }

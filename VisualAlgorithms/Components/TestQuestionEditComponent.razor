@@ -19,7 +19,7 @@
         <div class="form-group">
             <label for="question">Вопрос: </label>
             <InputTextArea Id="question" Class="form-control" @bind-Value="QuestionModel.TestQuestion.Question" />
-            <ValidationMessage For="@(() => QuestionModel.TestQuestion.Question)" />
+            <ValidationMessage Class="main-form-label text-danger" For="@(() => QuestionModel.TestQuestion.Question)" />
         </div>
 
         <div class="form-group">

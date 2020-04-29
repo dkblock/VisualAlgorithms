@@ -29,10 +29,10 @@ namespace VisualAlgorithms.Controllers
 
         [HttpPost]
         [Route("createQuestion")]
-        public async Task<bool> CreateTestQuestion(TestQuestionViewModel questionModel)
+        public async Task<IActionResult> CreateTestQuestion(TestQuestionViewModel questionModel)
         {
             if (!await _accessManager.HasAdminAccess(questionModel.UserId))
-                return false;
+                return Forbid();
 
             var testQuestionId = await AddTestQuestion(questionModel);
             var correctAnswerId = await AddTestQuestionAnswers(testQuestionId, questionModel.TestAnswers);
@@ -42,7 +42,7 @@ namespace VisualAlgorithms.Controllers
             _db.Entry(testQuestion).State = EntityState.Modified;
             await _db.SaveChangesAsync();
 
-            return questionModel.TestQuestion.IsLastQuestion;
+            return Ok();
         }
 
         private async Task<int> AddTestQuestion(TestQuestionViewModel questionModel)
@@ -64,8 +64,6 @@ namespace VisualAlgorithms.Controllers
 
         private async Task<int> AddTestQuestionAnswers(int questionId, List<TestAnswer> testAnswers)
         {
-            testAnswers.RemoveAll(ta => ta.Answer == null);
-
             foreach (var answer in testAnswers)
                 answer.TestQuestionId = questionId;
 
@@ -80,7 +78,6 @@ namespace VisualAlgorithms.Controllers
             }
 
             await _db.SaveChangesAsync();
-
             return correctAnswerId;
         }
 
