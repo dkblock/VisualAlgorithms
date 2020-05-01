@@ -25,7 +25,7 @@
 
         <div class="form-group">
             <label class="main-form-label">Тип вопроса</label>
-            <select class="form-control" @onchange="HandleQuestionType">
+            <select class="form-control" @bind="QuestionType">
                 <option value="@TestQuestionType.FreeAnswer">Со свободным ответом</option>
                 <option value="@TestQuestionType.SelectAnswer">С выбором ответа</option>
             </select>
@@ -35,7 +35,7 @@
         {
             <div class="form-group">
                 <label class="main-form-label">Вариантов ответа</label>
-                <select class="form-control" @onchange="HandleAnswersCount">
+                <select class="form-control" @bind="AnswersCount">
                     @for (var i = 2; i <= 10; i++)
                     {
                         var num = $"{i}";
@@ -83,7 +83,7 @@
         }
 
         <div class="form-group">
-            <button type="submit" class="btn btn-primary">Готово</button>
+            <button type="submit" class="button button-primary">Готово</button>
         </div>
     </EditForm>
 
@@ -107,17 +107,39 @@
     [Parameter]
     public TestQuestionViewModel QuestionModel { get; set; }
 
+    public TestQuestionType QuestionType
+    {
+        get => _questionType;
+        set
+        {
+            _questionType = value;
+            HandleQuestionType(value);
+        }
+    }
+
+    public int AnswersCount
+    {
+        get => _answersCount;
+        set
+        {
+            _answersCount = value;
+            HandleAnswersCount(value);
+        }
+    }
+
     private const string DefaultStatus = "Загрузить изображение";
     private readonly HttpClient _client = new HttpClient {BaseAddress = new Uri("https://localhost:5001/")};
     private string _imageName;
-    private int _answersCount = 1;
+    private int _answersCount;
+    private TestQuestionType _questionType;
     private string _status = DefaultStatus;
 
     protected override void OnInitialized()
     {
         _imageName = QuestionModel.Image;
         _status = string.IsNullOrEmpty(_imageName) ? DefaultStatus : _imageName;
-        _answersCount = QuestionModel.TestAnswers.Count;
+        AnswersCount = QuestionModel.TestAnswers.Count;
+        QuestionType = QuestionModel.TestQuestion.TestQuestionType;
     }
 
     private async Task EditTestQuestion()
@@ -133,32 +155,33 @@
             NavigationManager.NavigateTo($"Tests/Edit/{QuestionModel.TestQuestion.TestId}", true);
     }
 
-    private void HandleAnswersCount(ChangeEventArgs e)
+    private void HandleAnswersCount(int count)
     {
-        _answersCount = int.Parse(e.Value.ToString());
-
-        while (QuestionModel.TestAnswers.Count != _answersCount)
+        while (QuestionModel.TestAnswers.Count != count)
         {
-            if (_answersCount > QuestionModel.TestAnswers.Count)
+            if (count > QuestionModel.TestAnswers.Count)
                 QuestionModel.TestAnswers.Add(new TestAnswer());
-            else if (_answersCount < QuestionModel.TestAnswers.Count)
+            else if (count < QuestionModel.TestAnswers.Count)
                 QuestionModel.TestAnswers.RemoveAt(QuestionModel.TestAnswers.Count - 1);
         }
     }
 
-    private void HandleQuestionType(ChangeEventArgs e)
+    private void HandleQuestionType(TestQuestionType qt)
     {
-        if (e.Value.ToString() == "FreeAnswer")
+        if (qt == TestQuestionType.FreeAnswer)
         {
             QuestionModel.TestQuestion.TestQuestionType = TestQuestionType.FreeAnswer;
             QuestionModel.TestAnswers.RemoveRange(1, QuestionModel.TestAnswers.Count - 1);
-            _answersCount = 1;
+            AnswersCount = 1;
         }
         else
         {
             QuestionModel.TestQuestion.TestQuestionType = TestQuestionType.SelectAnswer;
-            QuestionModel.TestAnswers.Add(new TestAnswer());
-            _answersCount = 2;
+            if (AnswersCount == 1)
+            {
+                QuestionModel.TestAnswers.Add(new TestAnswer());
+                AnswersCount = 2;
+            }
         }
     }
 
