@@ -7,12 +7,20 @@
     @foreach (var algorithm in Model)
     {
         <div class="card">
-            <img class="card-img-top" src="@Url.Content("images")/@algorithm.ImageUrl" alt="Algorithm image">
+            <img class="card-img-top" src="images/@algorithm.ImageUrl" alt="Algorithm image">
             <div class="card-body card-body-bordered">
                 <h5 class="card-title">@algorithm.Name</h5>
-                <div class="card-body-btn-box">
-                    <a class="btn btn-primary card-body-btn" asp-controller="Algorithms" asp-action="Info" asp-route-id="@algorithm.Id">Информация</a>
-                    <a class="btn btn-primary card-body-btn" asp-controller="Constructor"asp-action="Module"  asp-route-id="@algorithm.Id">Конструктор</a>
+                <div class="button-box">
+                    <a asp-controller="Algorithms" asp-action="Info" asp-route-id="@algorithm.Id">
+                        <div class="button card-body-btn">
+                            Информация
+                        </div>
+                    </a>
+                    <a asp-controller="Constructor" asp-action="Module" asp-route-id="@algorithm.Id">
+                        <div class="button button-primary card-body-btn">
+                            Конструктор
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>

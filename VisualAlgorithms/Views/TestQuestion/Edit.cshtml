@@ -6,11 +6,10 @@
 @inject UserManager<ApplicationUser> UserManager
 
 @{
-    ViewData["Title"] = "Изменение вопроса";
+    ViewData["Title"] = "Редактирование вопроса";
     Model.UserId = UserManager.GetUserId(User);
 }
 
-<h4>Добавление вопроса</h4>
-<hr />
+<div class="main-form-title text-center">Вопрос @Model.QuestionNumber</div>
 @(await Html.RenderComponentAsync<TestQuestionEditComponent>(RenderMode.ServerPrerendered, new { QuestionModel = Model }))
 

@@ -8,6 +8,7 @@ namespace VisualAlgorithms.ViewModels
         public TestQuestion TestQuestion { get; set; }
         public List<TestAnswer> TestAnswers { get; set; }
         public string Image { get; set; }
+        public int QuestionNumber { get; set; }
         public bool IsNewTest { get; set; }
         public string UserId { get; set; }
     }

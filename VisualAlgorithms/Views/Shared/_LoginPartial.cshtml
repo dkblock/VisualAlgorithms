@@ -6,7 +6,7 @@
 <ul class="navbar-nav mr-auto">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown main-form-label">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 @UserManager.GetUserName(User)
             </a>
@@ -29,10 +29,10 @@
     else
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" id="register" asp-controller="Account" asp-action="Register">Регистрация</a>
+            <a class="nav-link main-form-label text-dark" id="register" asp-controller="Account" asp-action="Register">Регистрация</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" id="login" asp-controller="Account" asp-action="Login">Войти</a>
+            <a class="nav-link main-form-label text-dark" id="login" asp-controller="Account" asp-action="Login">Войти</a>
         </li>
     }
 </ul>

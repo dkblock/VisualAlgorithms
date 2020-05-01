@@ -8,63 +8,74 @@
 @using VisualAlgorithms.Models
 @using VisualAlgorithms.ViewModels
 @using BlazorInputFile
-@using VisualAlgorithms.AppMiddleware
 
 @inject NavigationManager NavigationManager
 
 <div class="question-container">
-    <EditForm Model="QuestionModel" Class="col-md-6">
-        <DataAnnotationsValidator />
+    <EditForm Model="QuestionModel" Class="col-6 main-form" OnValidSubmit="EditTestQuestion">
+        <FluentValidator></FluentValidator>
 
         <div class="form-group">
-            <label for="question">Вопрос: </label>
-            <InputTextArea Id="question" Class="form-control" @bind-Value="QuestionModel.TestQuestion.Question" />
-            <ValidationMessage Class="main-form-label text-danger" For="@(() => QuestionModel.TestQuestion.Question)" />
+            <label class="main-form-label">Вопрос</label>
+            <textarea class="form-control" @bind="QuestionModel.TestQuestion.Question"></textarea>
+            <div class="main-form-label text-danger">
+                <ValidationMessage For="@(() => QuestionModel.TestQuestion.Question)"/>
+            </div>
         </div>
 
         <div class="form-group">
-            <label for="questionType">Тип вопроса: </label>
-            <InputSelect Id="questionType" Class="form-control" @bind-Value="QuestionModel.TestQuestion.TestQuestionType">
+            <label class="main-form-label">Тип вопроса</label>
+            <select class="form-control" @onchange="HandleQuestionType">
                 <option value="@TestQuestionType.FreeAnswer">Со свободным ответом</option>
                 <option value="@TestQuestionType.SelectAnswer">С выбором ответа</option>
-            </InputSelect>
-            <ValidationMessage For="@(() => QuestionModel.TestQuestion.TestQuestionType)" />
-        </div>
-
-        <div class="form-group">
-            <label for="answer">Правильный ответ: </label>
-            <InputText Id="answer" Class="form-control" @bind-Value="QuestionModel.TestAnswers[0].Answer" />
-            <ValidationMessage For="@(() => QuestionModel.TestAnswers[0].Answer)" />
+            </select>
         </div>
 
         @if (QuestionModel.TestQuestion.TestQuestionType == TestQuestionType.SelectAnswer)
         {
             <div class="form-group">
-                <label for="answersCount">Вариантов ответа: </label>
-                <InputSelect Id="answerCount" Class="form-control" @bind-Value="_answersCount">
-                    @for (int i = 1; i < 10; i++)
+                <label class="main-form-label">Вариантов ответа</label>
+                <select class="form-control" @onchange="HandleAnswersCount">
+                    @for (var i = 2; i <= 10; i++)
+                    {
+                        var num = $"{i}";
+
+                        if (i == _answersCount)
                         {
-                            var num = $"{i}";
-                        <option value="@num">@num</option>
+                            <option value="@num" selected="selected">@num</option>
                         }
-                    /**/
-                    /**/
-                    /**/
-                </InputSelect>
+                        else
+                        {
+                            <option value="@num">@num</option>
+                        }
+
+                    }
+                </select>
             </div>
+        }
 
+        <div class="form-group">
+            <label class="main-form-label">Правильный ответ</label>
+            <input class="form-control" @bind="QuestionModel.TestAnswers[0].Answer"/>
+            <div class="main-form-label text-danger">
+                <ValidationMessage For="@(() => QuestionModel.TestAnswers[0].Answer)"/>
+            </div>
+        </div>
+
+        @if (QuestionModel.TestQuestion.TestQuestionType == TestQuestionType.SelectAnswer)
+        {
             <div class="form-group">
-                <label>Варианты ответа: </label>
+                <label class="main-form-label">Варианты ответа</label>
                 @{
-                    var count = int.Parse(_answersCount);
-
-                    for (int i = 0; i < count; i++)
+                    for (var i = 0; i < _answersCount - 1; i++)
                     {
                         var num = i + 1;
-                        var labelName = $"answer{num}";
+
                         <div class="form-group">
-                            <InputText Id="labelName" Class="form-control" @bind-Value="QuestionModel.TestAnswers[num].Answer" />
-                            <ValidationMessage For="@(() => QuestionModel.TestAnswers[num].Answer)" />
+                            <input class="form-control" @bind="QuestionModel.TestAnswers[num].Answer"/>
+                            <div class="main-form-label text-danger">
+                                <ValidationMessage For="@(() => QuestionModel.TestAnswers[num].Answer)"/>
+                            </div>
                         </div>
                     }
                 }
@@ -72,20 +83,22 @@
         }
 
         <div class="form-group">
-            <button @onclick="EditTestQuestion" class="btn btn-primary">Готово</button>
+            <button type="submit" class="btn btn-primary">Готово</button>
         </div>
     </EditForm>
 
-    <div class="col-md-6 question-img-container">
+    <div class="question-img-container col-md-6">
         @if (!string.IsNullOrEmpty(_imageName))
         {
-            <img class="test-img-bordered" src="images/test-questions/@_imageName" alt="img" />
+            <img class="test-img-bordered test-img-close" @onclick="ClearQuestionImage" src="images/test-questions/@_imageName" alt="img" />
         }
-
-        <div class="drag-drop-zone text-center">
-            <InputFile OnChange="HandleFile" />
-            @_status
-        </div>
+        else
+        {
+            <div class="drag-drop-zone text-center">
+                <InputFile OnChange="HandleFile" />
+                @_status
+            </div>
+        }
     </div>
 </div>
 
@@ -95,25 +108,21 @@
     public TestQuestionViewModel QuestionModel { get; set; }
 
     private const string DefaultStatus = "Загрузить изображение";
-    private readonly HttpClient _client = new HttpClient { BaseAddress = new Uri("https://localhost:5001/") };
+    private readonly HttpClient _client = new HttpClient {BaseAddress = new Uri("https://localhost:5001/")};
     private string _imageName;
-    private string _answersCount = "1";
+    private int _answersCount = 1;
     private string _status = DefaultStatus;
 
     protected override void OnInitialized()
     {
         _imageName = QuestionModel.Image;
-        _status = _imageName == null ? DefaultStatus : "Загрузить другое изображение";
-        _answersCount = (QuestionModel.TestAnswers.Count(ta => !string.IsNullOrEmpty(ta.Answer)) - 1).ToString();
+        _status = string.IsNullOrEmpty(_imageName) ? DefaultStatus : _imageName;
+        _answersCount = QuestionModel.TestAnswers.Count;
     }
 
     private async Task EditTestQuestion()
     {
-        if (QuestionModel.TestQuestion.TestQuestionType == TestQuestionType.FreeAnswer)
-            HandleAnswers(1);
-        else
-            HandleAnswers(int.Parse(_answersCount) + 1);
-
+        QuestionModel.Image = _imageName;
         var model = JsonConvert.SerializeObject(QuestionModel);
         var content = new StringContent(model, Encoding.UTF8, "application/json");
         var response = await _client.PostAsync("api/tests/editQuestion", content);
@@ -124,10 +133,33 @@
             NavigationManager.NavigateTo($"Tests/Edit/{QuestionModel.TestQuestion.TestId}", true);
     }
 
-    private void HandleAnswers(int startIndex)
+    private void HandleAnswersCount(ChangeEventArgs e)
     {
-        for (var i = startIndex; i < QuestionModel.TestAnswers.Count - 1; i++)
-            QuestionModel.TestAnswers[i].Answer = null;
+        _answersCount = int.Parse(e.Value.ToString());
+
+        while (QuestionModel.TestAnswers.Count != _answersCount)
+        {
+            if (_answersCount > QuestionModel.TestAnswers.Count)
+                QuestionModel.TestAnswers.Add(new TestAnswer());
+            else if (_answersCount < QuestionModel.TestAnswers.Count)
+                QuestionModel.TestAnswers.RemoveAt(QuestionModel.TestAnswers.Count - 1);
+        }
+    }
+
+    private void HandleQuestionType(ChangeEventArgs e)
+    {
+        if (e.Value.ToString() == "FreeAnswer")
+        {
+            QuestionModel.TestQuestion.TestQuestionType = TestQuestionType.FreeAnswer;
+            QuestionModel.TestAnswers.RemoveRange(1, QuestionModel.TestAnswers.Count - 1);
+            _answersCount = 1;
+        }
+        else
+        {
+            QuestionModel.TestQuestion.TestQuestionType = TestQuestionType.SelectAnswer;
+            QuestionModel.TestAnswers.Add(new TestAnswer());
+            _answersCount = 2;
+        }
     }
 
     private async Task HandleFile(IFileListEntry[] files)
@@ -143,15 +175,13 @@
                 var stream = new MemoryStream();
                 await file.Data.CopyToAsync(stream);
                 var imageContent = new MultipartFormDataContent
-            {
+                {
                     {new ByteArrayContent(stream.GetBuffer()), file.Name, file.Name}
                 };
 
                 var imageResponse = await _client.PostAsync("api/tests/uploadImg", imageContent);
                 _imageName = await imageResponse.Content.ReadAsStringAsync();
-
-                QuestionModel.Image = _imageName;
-                _status = "Загрузить другое изображение";
+                _status = _imageName;
             }
             else
             {
@@ -179,7 +209,8 @@
             });
 
             await _client.PostAsync("api/tests/clearImg", content);
+            _imageName = string.Empty;
+            _status = DefaultStatus;
         }
     }
-
 }

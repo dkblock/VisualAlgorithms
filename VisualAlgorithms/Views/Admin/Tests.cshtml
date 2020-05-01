@@ -17,7 +17,11 @@
             Количество вопросов
         </th>
         <th>
-            <a class="btn btn-success" asp-controller="Tests" asp-action="Create">Добавить тест</a>
+            <a asp-controller="Tests" asp-action="Create">
+                <div class="button button-success">
+                    Добавить тест
+                </div>
+            </a>
         </th>
     </tr>
     </thead>
@@ -35,7 +39,11 @@
                 @test.TestQuestions.Count
             </td>
             <td>
-                <a class="btn btn-primary" asp-controller="Tests" asp-action="Edit" asp-route-id="@test.Id">Изменить</a>
+                <a asp-controller="Tests" asp-action="Edit" asp-route-id="@test.Id">
+                    <div class="button button-primary">
+                        Изменить
+                    </div>
+                </a>
             </td>
         </tr>
     }

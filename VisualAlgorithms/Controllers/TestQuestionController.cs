@@ -24,7 +24,7 @@ namespace VisualAlgorithms.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpGet]
-        public IActionResult Create(int testId, bool isNewTest)
+        public async Task<IActionResult> Create(int testId, bool isNewTest)
         {
             var testQuestion = new TestQuestion
             {
@@ -37,6 +37,7 @@ namespace VisualAlgorithms.Controllers
             {
                 TestQuestion = testQuestion,
                 TestAnswers = testAnswers,
+                QuestionNumber = await GetQuestionNumber(testId),
                 IsNewTest = isNewTest
             };
 
@@ -60,6 +61,7 @@ namespace VisualAlgorithms.Controllers
             {
                 TestQuestion = testQuestion,
                 TestAnswers = testAnswers,
+                QuestionNumber = await GetQuestionNumber(testQuestion.TestId, testQuestion.Id),
                 Image = testQuestion.Image
             };
 
@@ -102,6 +104,18 @@ namespace VisualAlgorithms.Controllers
             }
 
             return RedirectToAction("Edit", "Tests", new {id = testQuestion.TestId});
+        }
+
+        private async Task<int> GetQuestionNumber(int testId, int questionId = -1)
+        {
+            var testQuestions = await _db.TestQuestions
+                .Where(tq => tq.TestId == testId)
+                .ToListAsync();
+
+            if (questionId == -1)
+                return testQuestions.Count + 1;
+
+            return testQuestions.FindIndex(tq => tq.Id == questionId) + 1;
         }
     }
 }

@@ -8,13 +8,11 @@
 @using VisualAlgorithms.Models
 @using VisualAlgorithms.ViewModels
 @using BlazorInputFile
-@using Microsoft.Data.SqlClient
-@using VisualAlgorithms.AppMiddleware
 
 @inject NavigationManager NavigationManager
 
 <div class="question-container">
-    <EditForm Model="QuestionModel" Class="col-md-6" OnValidSubmit="CreateTestQuestion">
+    <EditForm Model="QuestionModel" Class="col-6 main-form" OnValidSubmit="CreateTestQuestion">
         <FluentValidator></FluentValidator>
 
         <div class="form-group">
@@ -86,20 +84,23 @@
         }
 
         <div class="form-group">
-            <button type="submit" class="btn btn-primary">Далее</button>
+            <button type="submit" class="button button-primary">Далее</button>
         </div>
     </EditForm>
 
-    <div class="col-md-6 question-img-container">
+
+    <div class="question-img-container col-md-6">
         @if (!string.IsNullOrEmpty(_imageName))
         {
-            <img class="test-img-bordered" src="images/test-questions/@_imageName" alt="img"/>
+            <img class="test-img-bordered test-img-close" @onclick="ClearQuestionImage" src="images/test-questions/@_imageName" alt="img"/>
         }
-
-        <div class="drag-drop-zone text-center">
-            <InputFile OnChange="HandleFile"/>
-            @_status
-        </div>
+        else
+        {
+            <div class="drag-drop-zone text-center">
+                <InputFile OnChange="HandleFile"/>
+                @_status
+            </div>
+        }
     </div>
 </div>
 
@@ -109,13 +110,14 @@
     public TestQuestionViewModel QuestionModel { get; set; }
 
     private readonly HttpClient _client = new HttpClient {BaseAddress = new Uri("https://localhost:5001/")};
-    private const string DefaultStatus = "Загрузить изображение";
+        private const string DefaultStatus = "Загрузить изображение";
     private string _imageName;
     private int _answersCount = 1;
     private string _status = DefaultStatus;
 
     private async Task CreateTestQuestion()
     {
+        QuestionModel.Image = _imageName;
         var model = JsonConvert.SerializeObject(QuestionModel);
         var content = new StringContent(model, Encoding.UTF8, "application/json");
         var response = await _client.PostAsync("api/tests/createQuestion", content);
@@ -180,9 +182,7 @@
 
                 var imageResponse = await _client.PostAsync("api/tests/uploadImg", imageContent);
                 _imageName = await imageResponse.Content.ReadAsStringAsync();
-
-                QuestionModel.Image = _imageName;
-                _status = "Загрузить другое изображение";
+                _status = _imageName;
             }
             else
             {
@@ -202,6 +202,8 @@
             });
 
             await _client.PostAsync("api/tests/clearImg", content);
+            _imageName = string.Empty;
+            _status = DefaultStatus;
         }
     }
 
@@ -212,4 +214,5 @@
                string.Compare(ext, ".jpeg", StringComparison.Ordinal) == 0 ||
                string.Compare(ext, ".jpg", StringComparison.Ordinal) == 0;
     }
+
 }

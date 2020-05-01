@@ -10,6 +10,5 @@
     Model.UserId = UserManager.GetUserId(User);
 }
 
-<h4>Добавление вопроса</h4>
-<hr />
+<div class="main-form-title text-center">Вопрос @Model.QuestionNumber</div>
 @(await Html.RenderComponentAsync<TestQuestionCreateComponent>(RenderMode.ServerPrerendered, new { QuestionModel = Model }))
