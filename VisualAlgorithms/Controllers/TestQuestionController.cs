@@ -75,6 +75,8 @@ namespace VisualAlgorithms.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var testQuestion = await _db.TestQuestions.FindAsync(id);
+            ViewBag.QuestionNumber = await GetQuestionNumber(testQuestion.TestId, testQuestion.Id);
+
             return View(testQuestion);
         }
 
