@@ -4,37 +4,26 @@
     ViewData["Title"] = "Создание нового теста";
 }
 
-<h1>Create</h1>
-
-<h4>Info</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AlgorithmId" class="control-label"></label>
-                <select asp-for="AlgorithmId" class="custom-select form-control">
-                    @foreach (var algorithm in ViewBag.Algorithms)
-                    {
-                        <option value="@algorithm.Id">@algorithm.Name</option>
-                    }
-                </select>
-                <span asp-validation-for="AlgorithmId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Далее" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+<div class="main-form-container col-3">
+    <div class="main-form-title text-center">Создание нового теста</div>
+    <form class="main-form" asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="main-form-label text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Name" class="main-form-label"></label>
+            <input asp-for="Name" class="form-control"/>
+            <span asp-validation-for="Name" class="main-form-label text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="AlgorithmId" class="main-form-label">Алгоритм</label>
+            <select asp-for="AlgorithmId" class="custom-select form-control">
+                @foreach (var algorithm in ViewBag.Algorithms)
+                {
+                    <option value="@algorithm.Id">@algorithm.Name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Далее" class="button button-success main-form-btn"/>
+        </div>
+    </form>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-

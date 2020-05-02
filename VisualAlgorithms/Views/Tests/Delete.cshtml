@@ -4,18 +4,17 @@
     ViewData["Title"] = "Удаление теста";
 }
 
-<h1>Delete</h1>
-
-<h3>Вы действительно хотите удалить тест?</h3>
-<div>
-    <h4>Test</h4>
-    <hr />
-
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="hidden" asp-for="Name" />
-        <input type="hidden" asp-for="AlgorithmId" />
-        <input type="submit" value="Удалить" class="btn btn-danger" /> |
-        <a asp-controller="Tests" asp-action="Edit" asp-route-id="@Model.Id">Back to List</a>
+<div class="main-form-container col-3">
+    <div class="main-form-title text-center">@Model.Name</div>
+    <form class="main-form" asp-action="Delete">
+        <div class="main-form-label text-center">Вы действительно хотите удалить данный тест? Все связанные данные также будут удалены!</div>
+        <hr/>
+        <input type="hidden" asp-for="Id"/>
+        <input type="hidden" asp-for="Name"/>
+        <input type="hidden" asp-for="AlgorithmId"/>
+        <div class="button-box button-box-centered">
+            <input type="submit" value="Да" class="button button-danger main-form-btn col-5" />
+            <a class="button main-form-btn col-5" asp-controller="Tests" asp-action="Edit" asp-route-id="@Model.Id">Нет</a>
+        </div>
     </form>
 </div>

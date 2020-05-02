@@ -4,55 +4,55 @@
     ViewData["Title"] = "Редактирование теста";
 }
 
-<h1>Edit</h1>
+<div class="main-form-container col-6">
+    <div class="main-form-title text-center">@Model.Name</div>
+    <form class="main-form" asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id"/>
 
-<h4>Test</h4>
-<hr/>
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id"/>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" value="@Model.Name" class="form-control"/>
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AlgorithmId" class="control-label"></label>
-                <select asp-for="AlgorithmId" class="custom-select form-control">
-                    @foreach (var algorithm in ViewBag.Algorithms)
-                    {
-                        <option value="@algorithm.Id">@algorithm.Name</option>
-                    }
-                </select>
-                <span asp-validation-for="AlgorithmId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <a asp-controller="TestQuestion" asp-action="Create" asp-route-testId="@Model.Id" asp-route-isNewTest="false"
-                   class="btn btn-success">
-                    Добавить вопрос
-                </a>
-            </div>
-            <div class="form-group">
-                @for (var i = 0; i < Model.TestQuestions.Count; i++)
+        <div class="form-group">
+            <label class="main-form-label" asp-for="Name" class="main-form-label"></label>
+            <input asp-for="Name" value="@Model.Name" class="form-control"/>
+            <span asp-validation-for="Name" class="main-form-label text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="AlgorithmId" class="main-form-label"></label>
+            <select asp-for="AlgorithmId" class="custom-select form-control">
+                @foreach (var algorithm in ViewBag.Algorithms)
                 {
-                    var question = Model.TestQuestions[i];
-                    <div class="form-group">
-                        Вопрос @(i + 1): @question.Question
-                    </div>
-                    <a asp-controller="TestQuestion" asp-action="Edit" asp-route-id="@question.Id" class="btn btn-primary">Изменить</a>
+                    <option value="@algorithm.Id">@algorithm.Name</option>
+                }
+            </select>
+            <span asp-validation-for="AlgorithmId" class="main-form-label text-danger"></span>
+        </div>
+
+        <div class="form-group button-box">
+            <label class="main-form-label">Вопросы</label>
+            <a class="button button-success col-5" asp-controller="TestQuestion" asp-action="Create" asp-route-testId="@Model.Id" asp-route-isNewTest="false">
+                Добавить вопрос
+            </a>
+        </div>
+
+        <div class="form-group">
+            @for (var i = 0; i < Model.TestQuestions.Count; i++)
+            {
+                var question = Model.TestQuestions[i];
+                <div class="form-group">
+                    Вопрос @(i + 1): @question.Question
+                </div>
+                <a asp-controller="TestQuestion" asp-action="Edit" asp-route-id="@question.Id" class="btn btn-primary">Изменить</a>
+
+                if (Model.TestQuestions.Count > 1)
+                {
                     <a asp-controller="TestQuestion" asp-action="Delete" asp-route-id="@question.Id" class="btn btn-danger">Удалить</a>
                 }
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Готово" class="btn btn-primary"/>
-                <a asp-controller="Tests" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Удалить тест</a>
-            </div>
-        </form>
-    </div>
-</div>
+            }
+        </div>
 
-<div>
-    <a asp-controller="Admin" asp-action="Tests" class="btn btn-outline-primary">Назад</a>
+        <div class="form-group button-box button-box-centered">
+            <input type="submit" value="Готово" class="button button-primary col-5"/>
+            <a asp-controller="Tests" asp-action="Delete" asp-route-id="@Model.Id" class="button button-danger col-5">Удалить тест</a>
+        </div>
+    </form>
 </div>
