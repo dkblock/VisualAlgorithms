@@ -8,8 +8,10 @@
 @using VisualAlgorithms.Models
 @using VisualAlgorithms.ViewModels
 @using BlazorInputFile
+@using VisualAlgorithms.AppHelpers
 
 @inject NavigationManager NavigationManager
+@inject InnerService InnerService
 
 <div class="question-container">
     <EditForm Model="QuestionModel" Class="col-6 main-form" OnValidSubmit="CreateTestQuestion">
@@ -109,11 +111,16 @@
     [Parameter]
     public TestQuestionViewModel QuestionModel { get; set; }
 
-    private readonly HttpClient _client = new HttpClient {BaseAddress = new Uri("https://localhost:5001/")};
-        private const string DefaultStatus = "Загрузить изображение";
+    private const string DefaultStatus = "Загрузить изображение";
+    private HttpClient _client;
     private string _imageName;
     private int _answersCount = 1;
     private string _status = DefaultStatus;
+
+    protected override void OnInitialized()
+    {
+        _client = InnerService.Client;
+    }
 
     private async Task CreateTestQuestion()
     {

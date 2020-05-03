@@ -1,9 +1,11 @@
+using System;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VisualAlgorithms.AppHelpers;
 using VisualAlgorithms.AppMiddleware;
 using VisualAlgorithms.Models;
 using VisualAlgorithms.ViewModels;
@@ -22,16 +24,30 @@ namespace VisualAlgorithms
         public void ConfigureServices(IServiceCollection services)
         {
             var connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
-            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>();
+
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddControllersWithViews();
+            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+                {
+                    options.Password.RequiredLength = 6;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireDigit = false;
+                })
+                .AddEntityFrameworkStores<ApplicationContext>();
 
             services.AddScoped<AccessManager, AccessManager>();
             services.AddScoped<TestsManager, TestsManager>();
             services.AddTransient<IValidator<TestQuestionViewModel>, TestQuestionViewModelValidator>();
             services.AddTransient<IValidator<TestAnswer>, TestAnswerValidator>();
+
+            services.AddHttpClient<InnerService, InnerService>(client =>
+            {
+                client.BaseAddress = new Uri(Configuration["BaseUrl"]);
+            });
         }
 
         public void Configure(IApplicationBuilder app)
@@ -48,7 +64,7 @@ namespace VisualAlgorithms
                 endpoints.MapControllerRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}"
-                    );
+                );
 
                 endpoints.MapRazorPages();
                 endpoints.MapBlazorHub();

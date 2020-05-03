@@ -1,11 +1,11 @@
-﻿
-@{
-    ViewData["Title"] = "Админ-панель";
+﻿@{
+    ViewData["Title"] = "Управление";
 }
 
-<h1>Index</h1>
-<div class="list-group">
-    <a class="list-group-item list-group-item-action" asp-controller="Admin" asp-action="Tests">Тесты</a>
-    <a class="list-group-item list-group-item-action" asp-controller="Admin" asp-action="Stats">Статистика</a>
+<div class="main-form-container col-3">
+    <div class="main-form-title text-center">Управление</div>
+    <div class="list-group text-center">
+        <a class="list-group-item list-group-item-action" asp-controller="Admin" asp-action="Tests">Тесты</a>
+        <a class="list-group-item list-group-item-action" asp-controller="Admin" asp-action="Stats">Статистика</a>
+    </div>
 </div>
-

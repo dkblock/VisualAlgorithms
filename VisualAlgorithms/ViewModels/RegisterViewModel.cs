@@ -5,6 +5,7 @@ namespace VisualAlgorithms.ViewModels
     public class RegisterViewModel
     {
         [Required(ErrorMessage = "Введите Email!")]
+        [EmailAddress(ErrorMessage = "Неверный формат Email!")]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
@@ -17,6 +18,7 @@ namespace VisualAlgorithms.ViewModels
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Выберите группу!")]
+        [Display(Name = "Группа")]
         public string Group { get; set; }
 
         [Required(ErrorMessage = "Введите пароль!")]

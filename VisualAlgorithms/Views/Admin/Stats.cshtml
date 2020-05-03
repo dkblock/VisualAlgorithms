@@ -1,62 +1,38 @@
-﻿@model IEnumerable<VisualAlgorithms.Models.UserTest>
-
+﻿@using System.Linq
+@model IEnumerable<VisualAlgorithms.Models.UserTest>
 @{
     ViewData["Title"] = "Статистика";
 }
 
-<h1>Stats</h1>
-
-<table class="table">
+<div class="main-form-title text-center">Статистика</div>
+<table class="table text-center">
     <thead>
     <tr>
+        <th>@Html.DisplayNameFor(modelItem => modelItem.User.LastName)</th>
+        <th>@Html.DisplayNameFor(modelItem => modelItem.User.FirstName)</th>
+        <th>@Html.DisplayNameFor(modelItem => modelItem.User.Group)</th>
+        <th>@Html.DisplayNameFor(modelItem => modelItem.Test.Name)</th>
+        <th>@Html.DisplayNameFor(modelItem => modelItem.Test.Algorithm.Name)</th>
         <th>
-            @Html.DisplayNameFor(model => model.User.LastName)
+            <select>
+
+            </select>
+            @Html.DisplayNameFor(modelItem => modelItem.Result)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.User.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.User.Group)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Test.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Test.Algorithm.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Result)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PassingTime)
-        </th>
+        <th>@Html.DisplayNameFor(modelItem => modelItem.PassingTime)</th>
     </tr>
     </thead>
     <tbody>
     @foreach (var item in Model)
     {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Group)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Test.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Test.Algorithm.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Result)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PassingTime)
-            </td>
+            <td>@item.User.LastName</td>
+            <td>@item.User.FirstName</td>
+            <td>@item.User.Group</td>
+            <td>@item.Test.Name</td>
+            <td>@item.Test.Algorithm.Name</td>
+            <td>@item.Result</td>
+            <td>@item.PassingTime</td>
         </tr>
     }
     </tbody>
