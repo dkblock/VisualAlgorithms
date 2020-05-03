@@ -5,6 +5,7 @@ namespace VisualAlgorithms.Models
 {
     public class Test
     {
+        [Key]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Введите название!")]

@@ -14,9 +14,15 @@
                 <span class="main-form-label text-danger" asp-validation-for="Email"></span>
             </div>
             <div class="form-group col-6">
-                <label asp-for="Group" class="main-form-label"></label><br />
-                <input asp-for="Group" class="form-control" />
-                <span class="main-form-label text-danger" asp-validation-for="Group"></span>
+                <label asp-for="GroupId" class="main-form-label"></label><br />
+                <select asp-for="GroupId" class="custom-select">
+                    <option value="0" selected hidden disabled></option>
+                    @foreach (var group in Model.Groups)
+                    {
+                        <option value="@group.Id">@group.Name</option>
+                    }
+                </select>
+                <span class="main-form-label text-danger" asp-validation-for="GroupId"></span>
             </div>
         </div>
         <div class="row">

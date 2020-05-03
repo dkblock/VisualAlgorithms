@@ -5,8 +5,10 @@ namespace VisualAlgorithms.Models
 {
     public class Algorithm
     {
+        [Key]
         public int Id { get; set; }
 
+        [Required]
         [Display(Name = "Структура данных")]
         public string Name { get; set; }
 

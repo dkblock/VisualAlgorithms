@@ -4,8 +4,12 @@ namespace VisualAlgorithms.Models
 {
     public class TestAnswer
     {
+        [Key]
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "Введите ответ!")]
         public string Answer { get; set; }
+
         public int TestQuestionId { get; set; }
 
         public TestQuestion TestQuestion { get; set; }

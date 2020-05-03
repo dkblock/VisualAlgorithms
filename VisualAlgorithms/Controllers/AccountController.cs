@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using VisualAlgorithms.Models;
 using VisualAlgorithms.ViewModels;
 
@@ -8,11 +10,13 @@ namespace VisualAlgorithms.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly ApplicationContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(ApplicationContext db, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
+            _db = db;
             _userManager = userManager;
             _signInManager = signInManager;
         }
@@ -23,9 +27,14 @@ namespace VisualAlgorithms.Controllers
         }
 
         [HttpGet]
-        public IActionResult Register()
+        public async Task<IActionResult> Register()
         {
-            return View();
+            var groups = await _db.Groups
+                .Where(g => g.IsAvailableForRegister)
+                .ToListAsync();
+            var registerModel = new RegisterViewModel {Groups = groups};
+
+            return View(registerModel);
         }
 
         [HttpPost]
@@ -39,7 +48,7 @@ namespace VisualAlgorithms.Controllers
                     Email = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    Group = model.Group
+                    GroupId = model.GroupId
                 };
                 
                 var result = await _userManager.CreateAsync(user, model.Password);

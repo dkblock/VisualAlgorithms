@@ -1,39 +1,70 @@
-﻿@using System.Linq
-@model IEnumerable<VisualAlgorithms.Models.UserTest>
+﻿@model VisualAlgorithms.ViewModels.AdminStatsViewModel
 @{
     ViewData["Title"] = "Статистика";
 }
 
 <div class="main-form-title text-center">Статистика</div>
-<table class="table text-center">
-    <thead>
-    <tr>
-        <th>@Html.DisplayNameFor(modelItem => modelItem.User.LastName)</th>
-        <th>@Html.DisplayNameFor(modelItem => modelItem.User.FirstName)</th>
-        <th>@Html.DisplayNameFor(modelItem => modelItem.User.Group)</th>
-        <th>@Html.DisplayNameFor(modelItem => modelItem.Test.Name)</th>
-        <th>@Html.DisplayNameFor(modelItem => modelItem.Test.Algorithm.Name)</th>
-        <th>
-            <select>
-
-            </select>
-            @Html.DisplayNameFor(modelItem => modelItem.Result)
-        </th>
-        <th>@Html.DisplayNameFor(modelItem => modelItem.PassingTime)</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model)
-    {
+<form class="main-form button-box" method="get">
+    <div class="form-group">
+        <label class="main-form-label">Алгоритм</label>
+        <select class="custom-select" name="algorithmId" onchange="this.form.submit()">
+            @foreach (var algorithm in Model.Algorithms)
+            {
+                if (Model.AlgorithmId == algorithm.Id)
+                {
+                    <option value="@algorithm.Id" selected>@algorithm.Name</option>
+                }
+                else
+                {
+                    <option value="@algorithm.Id">@algorithm.Name</option>
+                }
+            }
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label class="main-form-label">Тест</label>
+        <select class="custom-select" name="testId" onchange="this.form.submit()">
+            @foreach (var test in Model.Tests)
+            {
+                if (Model.TestId == test.Id)
+                {
+                    <option value="@test.Id" selected>@test.Name</option>
+                }
+                else
+                {
+                    <option value="@test.Id">@test.Name</option>
+                }
+            }
+        </select>
+    </div>
+</form>
+<div>
+    <table class="table text-center">
+        <thead>
         <tr>
-            <td>@item.User.LastName</td>
-            <td>@item.User.FirstName</td>
-            <td>@item.User.Group</td>
-            <td>@item.Test.Name</td>
-            <td>@item.Test.Algorithm.Name</td>
-            <td>@item.Result</td>
-            <td>@item.PassingTime</td>
+            <th>Фамилия</th>
+            <th>Имя</th>
+            <th>Группа</th>
+            <th>Название теста</th>
+            <th>Алгоритм</th>
+            <th>Результат (%)</th>
+            <th>Время прохождения</th>
         </tr>
-    }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.UserTests)
+        {
+            <tr>
+                <td>@item.User.LastName</td>
+                <td>@item.User.FirstName</td>
+                <td>@item.User.Group</td>
+                <td>@item.Test.Name</td>
+                <td>@item.Test.Algorithm.Name</td>
+                <td>@item.Result</td>
+                <td>@item.PassingTime</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

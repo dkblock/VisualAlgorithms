@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using VisualAlgorithms.AppHelpers;
 using VisualAlgorithms.AppMiddleware;
 using VisualAlgorithms.Models;
@@ -27,7 +28,10 @@ namespace VisualAlgorithms
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                 {

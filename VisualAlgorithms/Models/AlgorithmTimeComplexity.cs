@@ -4,6 +4,7 @@ namespace VisualAlgorithms.Models
 {
     public class AlgorithmTimeComplexity
     {
+        [Key]
         public int Id { get; set; }
 
         [Display(Name = "Сортировка (в среднем)")]

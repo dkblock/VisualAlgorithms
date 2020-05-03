@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-
 namespace VisualAlgorithms.Models
 {
     public class UserTest
