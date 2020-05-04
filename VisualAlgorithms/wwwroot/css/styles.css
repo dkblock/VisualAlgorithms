@@ -226,6 +226,7 @@ pre {
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
     padding: 20px;
+    margin-bottom: 20px;
 }
 
 .main-form-btn { width: 100%; }

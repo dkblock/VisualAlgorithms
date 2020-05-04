@@ -6,6 +6,23 @@
 <div class="main-form-title text-center">Статистика</div>
 <form class="main-form button-box" method="get">
     <div class="form-group">
+        <label class="main-form-label">Группа</label>
+        <select class="custom-select" name="groupId" onchange="this.form.submit()">
+            @foreach (var group in Model.Groups)
+            {
+                if (Model.GroupId == group.Id)
+                {
+                    <option value="@group.Id" selected>@group.Name</option>
+                }
+                else
+                {
+                    <option value="@group.Id">@group.Name</option>
+                }
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
         <label class="main-form-label">Алгоритм</label>
         <select class="custom-select" name="algorithmId" onchange="this.form.submit()">
             @foreach (var algorithm in Model.Algorithms)
@@ -21,7 +38,7 @@
             }
         </select>
     </div>
-    
+
     <div class="form-group">
         <label class="main-form-label">Тест</label>
         <select class="custom-select" name="testId" onchange="this.form.submit()">
@@ -35,6 +52,22 @@
                 {
                     <option value="@test.Id">@test.Name</option>
                 }
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label class="main-form-label">Время прохождения</label>
+        <select class="custom-select" name="orderBy" onchange="this.form.submit()">
+            @if (Model.OrderBy == 1)
+            {
+                <option value="0">Сначала новые</option>
+                <option value="1" selected>Сначала старые</option>
+            }
+            else
+            {
+                <option value="0" selected>Сначала новые</option>
+                <option value="1">Сначала старые</option>
             }
         </select>
     </div>
@@ -58,7 +91,7 @@
             <tr>
                 <td>@item.User.LastName</td>
                 <td>@item.User.FirstName</td>
-                <td>@item.User.Group</td>
+                <td>@item.User.Group.Name</td>
                 <td>@item.Test.Name</td>
                 <td>@item.Test.Algorithm.Name</td>
                 <td>@item.Result</td>

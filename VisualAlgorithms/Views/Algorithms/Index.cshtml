@@ -3,6 +3,7 @@
     ViewData["Title"] = "Алгоритмы";
 }
 
+<div class="main-form-title text-center">Алгоритмы</div>
 <div class="card-deck">
     @foreach (var algorithm in Model)
     {
@@ -11,15 +12,11 @@
             <div class="card-body card-body-bordered">
                 <h5 class="card-title">@algorithm.Name</h5>
                 <div class="button-box">
-                    <a asp-controller="Algorithms" asp-action="Info" asp-route-id="@algorithm.Id">
-                        <div class="button card-body-btn">
-                            Информация
-                        </div>
+                    <a class="button col-5" asp-controller="Algorithms" asp-action="Info" asp-route-id="@algorithm.Id">
+                        Информация
                     </a>
-                    <a asp-controller="Constructor" asp-action="Module" asp-route-id="@algorithm.Id">
-                        <div class="button button-primary card-body-btn">
-                            Конструктор
-                        </div>
+                    <a class="button button-primary col-5" asp-controller="Constructor" asp-action="Module" asp-route-id="@algorithm.Id">
+                        Конструктор
                     </a>
                 </div>
             </div>
