@@ -11,17 +11,15 @@
                 @UserManager.GetUserName(User)
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <form id="manageForm" class="dropdown-item form-inline" asp-controller="Account" asp-action="Index">
-                    <button id="account" type="submit" class="nav-link btn btn-link text-dark">Аккаунт</button>
-                </form>
+                <a asp-controller="Account" asp-action="Index" id="account" class="dropdown-item">Аккаунт</a>
+
                 @if (User.IsInRole("admin"))
                 {
-                    <form id="administrationForm" class="dropdown-item form-inline" asp-controller="Admin" asp-action="Index">
-                        <button id="manage" type="submit" class="nav-link btn btn-link text-dark">Управление</button>
-                    </form>
+                    <a asp-controller="Admin" asp-action="Index" id="manage" class="dropdown-item">Управление</a>
                 }
-                <form id="logoutForm" class="dropdown-item form-inline" asp-controller="Account" asp-action="Logout">
-                    <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Выйти</button>
+
+                <form id="logoutForm" class="dropdown-item" asp-controller="Account" asp-action="Logout">
+                    <input id="logout" class="btn-link dropdown-item" type="submit" value="Выйти"/>
                 </form>
             </div>
         </li>
