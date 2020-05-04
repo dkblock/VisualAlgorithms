@@ -1,0 +1,30 @@
+﻿@model IEnumerable<VisualAlgorithms.Models.UserTest>
+@{
+    ViewData["Title"] = "Статистика";
+}
+
+<div class="main-form-title text-center">Статистика</div>
+<div>
+    <table class="table text-center">
+        <thead>
+        <tr>
+            <th>Название теста</th>
+            <th>Алгоритм</th>
+            <th>Результат (%)</th>
+            <th>Время прохождения</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Test.Name</td>
+                <td>@item.Test.Algorithm.Name</td>
+                <td>@item.Result</td>
+                <td>@item.PassingTime</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+

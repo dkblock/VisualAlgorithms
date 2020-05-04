@@ -12,12 +12,12 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <form id="manageForm" class="dropdown-item form-inline" asp-controller="Account" asp-action="Index">
-                    <button id="manage" type="submit" class="nav-link btn btn-link text-dark">Аккаунт</button>
+                    <button id="account" type="submit" class="nav-link btn btn-link text-dark">Аккаунт</button>
                 </form>
                 @if (User.IsInRole("admin"))
                 {
                     <form id="administrationForm" class="dropdown-item form-inline" asp-controller="Admin" asp-action="Index">
-                        <button id="administration" type="submit" class="nav-link btn btn-link text-dark">Управление</button>
+                        <button id="manage" type="submit" class="nav-link btn btn-link text-dark">Управление</button>
                     </form>
                 }
                 <form id="logoutForm" class="dropdown-item form-inline" asp-controller="Account" asp-action="Logout">

@@ -1,7 +1,11 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Аккаунт";
 }
 
-<h1>Аккаунт</h1>
-
+<div class="main-form-container col-3">
+    <div class="main-form-title text-center">Аккаунт</div>
+    <div class="list-group text-center">
+        <a class="list-group-item list-group-item-action" asp-controller="Account" asp-action="Stats">Статистика</a>
+        <a class="list-group-item list-group-item-action" asp-controller="Account" asp-action="Settings">Настройки</a>
+    </div>
+</div>

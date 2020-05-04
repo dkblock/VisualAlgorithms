@@ -1,0 +1,28 @@
+﻿@model VisualAlgorithms.ViewModels.ChangePasswordViewModel
+
+@{
+    ViewData["Title"] = "Настройки";
+}
+
+<div class="main-form-container col-3">
+    <div class="main-form-title text-center">Настройки</div>
+    <form class="main-form" method="post" asp-controller="Account" asp-action="Settings">
+        <div class="main-form-label text-danger" asp-validation-summary="ModelOnly"></div>
+        <input asp-for="Id" type="hidden"/>
+        <div class="form-group">
+            <label asp-for="OldPassword" class="main-form-label"></label><br />
+            <input asp-for="OldPassword" class="form-control" />
+            <span class="main-form-label text-danger" asp-validation-for="OldPassword"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="NewPassword" class="main-form-label"></label><br />
+            <input asp-for="NewPassword" class="form-control" />
+            <span class="main-form-label text-danger" asp-validation-for="NewPassword"></span>
+        </div>
+        <div class="form-group button-box button-box-centered">
+            <a asp-controller="Account" asp-action="Index" class="button main-form-btn col-5">Назад</a>
+            <input class="button button-success main-form-btn col-5" type="submit" value="Готово" />
+        </div>
+    </form>
+</div>
+

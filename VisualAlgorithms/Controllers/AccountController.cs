@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using VisualAlgorithms.Models;
 using VisualAlgorithms.ViewModels;
@@ -14,13 +15,15 @@ namespace VisualAlgorithms.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AccountController(ApplicationContext db, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(ApplicationContext db, UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager)
         {
             _db = db;
             _userManager = userManager;
             _signInManager = signInManager;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             return View();
@@ -50,7 +53,7 @@ namespace VisualAlgorithms.Controllers
                     LastName = model.LastName,
                     GroupId = model.GroupId
                 };
-                
+
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
@@ -70,7 +73,7 @@ namespace VisualAlgorithms.Controllers
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
-            return View(new LoginViewModel { ReturnUrl = returnUrl });
+            return View(new LoginViewModel {ReturnUrl = returnUrl});
         }
 
         [HttpPost]
@@ -79,13 +82,14 @@ namespace VisualAlgorithms.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, false);
+                var result =
+                    await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, false);
 
                 if (result.Succeeded)
                 {
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                         return Redirect(model.ReturnUrl);
-                    
+
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -101,6 +105,56 @@ namespace VisualAlgorithms.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Stats()
+        {
+            var userId = _userManager.GetUserId(User);
+            var userTests = await _db.UserTests
+                .Include(ut => ut.Test)
+                .ThenInclude(t => t.Algorithm)
+                .Where(ut => ut.User.Id == userId)
+                .OrderByDescending(ut => ut.PassingTime)
+                .ToListAsync();
+
+            return View(userTests);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult Settings()
+        {
+            var userId = _userManager.GetUserId(User);
+            var passwordModel = new ChangePasswordViewModel {Id = userId};
+
+            return View(passwordModel);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Settings(ChangePasswordViewModel passwordModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByIdAsync(passwordModel.Id);
+
+                if (user != null)
+                {
+                    var result = await _userManager.ChangePasswordAsync(user, passwordModel.OldPassword,
+                        passwordModel.NewPassword);
+
+                    if (result.Succeeded)
+                        return RedirectToAction("Index");
+
+                    foreach (var error in result.Errors)
+                        ModelState.AddModelError(string.Empty, error.Description);
+                }
+                else
+                    ModelState.AddModelError(string.Empty, "Пользователь не найден");
+            }
+
+            return View(passwordModel);
         }
     }
 }
