@@ -1,0 +1,25 @@
+﻿@model VisualAlgorithms.Models.Group
+
+@{
+    ViewData["Title"] = "Редактирование группы";
+}
+
+<div class="main-form-container col-4">
+    <div class="main-form-title text-center">@Model.Name</div>
+    <form class="main-form" asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="main-form-label text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Name" class="main-form-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="main-form-label text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input asp-for="IsAvailableForRegister" class="main-form-label" />
+            <label asp-for="IsAvailableForRegister" class="main-form-label"></label>
+        </div>
+        <div class="form-group button-box button-box-centered">
+            <input type="submit" value="Готово" class="button button-success main-form-btn col-5" />
+            <a asp-controller="Groups" asp-action="Index" class="button main-form-btn col-5">Назад</a>
+        </div>
+    </form>
+</div>

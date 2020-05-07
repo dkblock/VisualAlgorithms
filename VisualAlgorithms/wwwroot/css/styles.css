@@ -49,6 +49,7 @@
     border: 2px dashed #ff0000;
     border-radius: 5px;
     cursor: pointer;
+    opacity: 0.5;
 }
 
 .drag-drop-zone {
@@ -96,9 +97,7 @@ pre {
     flex-direction: column;
 }
 
-.button-box-centered {
-    justify-content: space-evenly;
-}
+.button-box-centered { justify-content: space-evenly; }
 
 .button {
     border: 1px solid #ced4da;
@@ -246,11 +245,24 @@ pre {
 }
 
 .main-form-btn {
-    margin-top: 10px; 
-     width: 100%;
+    margin-top: 10px;
+    width: 100%;
 }
 
 .main-form-label {
     font-size: 14px;
     font-weight: 600;
+}
+
+.main-form-label-lg {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.table-button {
+    width: 100%;
+}
+
+.table td, .table thead th {
+     vertical-align: middle;
 }

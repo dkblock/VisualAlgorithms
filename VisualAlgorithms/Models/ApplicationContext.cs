@@ -74,6 +74,5 @@ namespace VisualAlgorithms.Models
         public DbSet<TestAnswer> TestAnswers { get; set; }
         public DbSet<UserAnswer> UserAnswers { get; set; }
         public DbSet<UserTest> UserTests { get; set; }
-        public DbSet<VisualAlgorithms.ViewModels.ChangePasswordViewModel> ChangePasswordViewModel { get; set; }
     }
 }

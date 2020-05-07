@@ -3,30 +3,27 @@
     ViewData["Title"] = "Тесты";
 }
 
-<h1 class="display-4 text-center">Тесты</h1>
-
+<div class="main-form-title text-center">Тесты</div>
 <table class="table text-center">
     <thead>
         <tr>
-            <th scope="col">
+            <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
-            <th scope="col">
+            <th>
                 @Html.DisplayNameFor(model => model.Algorithm.Name)
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
     @foreach (var test in Model)
     {
         <tr>
+            <td>@test.Name</td>
+            <td>@test.Algorithm.Name</td>
             <td>
-                <a class="list-group-item list-group-item-action" asp-controller="Tests" asp-action="Info" asp-route-id="@test.Id">
-                    @Html.DisplayFor(modelItem => test.Name)
-                </a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => test.Algorithm.Name)
+                <a class="button button-primary table-button" asp-controller="Tests" asp-action="Info" asp-route-id="@test.Id">Начать</a>
             </td>
         </tr>
     }

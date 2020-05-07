@@ -12,6 +12,7 @@ namespace VisualAlgorithms.Models
         [Display(Name = "Название")]
         public string Name { get; set; }
 
+        [Display(Name = "Доступна для регистрации")]
         public bool IsAvailableForRegister { get; set; }
 
         public List<ApplicationUser> Users { get; set; }

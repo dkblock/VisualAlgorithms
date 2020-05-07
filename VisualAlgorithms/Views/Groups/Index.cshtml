@@ -1,0 +1,26 @@
+﻿@model List<VisualAlgorithms.Models.Group>
+@{
+    ViewData["Title"] = "Группы";
+}
+
+<div class="main-form-container col-4">
+    <div class="main-form-title text-center">Группы</div>
+    <div class="main-form">
+        <a asp-controller="Groups" asp-action="Create" class="button button-success main-form-btn">Добавить группу</a>
+        <hr />
+        @foreach (var group in Model)
+        {
+            <div class="form-group">
+                <div class="button-box">
+                    <div class="main-form-label-lg col-6">@group.Name</div>
+                    <div class="col-6 button-box-col">
+                        <a asp-controller="Groups" asp-action="Edit" asp-route-id="@group.Id" class="button button-primary main-form-btn">Изменить</a>
+                        <a asp-controller="Groups" asp-action="Delete" asp-route-id="@group.Id" class="button button-danger main-form-btn">Удалить</a>
+                    </div>
+                </div>
+            </div>
+            <hr />
+        }
+        <a asp-controller="Admin" asp-action="Index" class="button main-form-btn">Назад</a>
+    </div>
+</div>

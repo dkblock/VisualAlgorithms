@@ -1,0 +1,21 @@
+﻿@model VisualAlgorithms.Models.Group
+@{
+    ViewData["Title"] = "Удаление группы";
+}
+
+<div class="main-form-container col-4">
+    <div class="main-form-title text-center">@Model.Name</div>
+    <form class="main-form" asp-action="Delete">
+        <div class="main-form-label text-center">Вы действительно хотите удалить данную группу?</div>
+        <hr />
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Name" />
+        <input type="hidden" asp-for="IsAvailableForRegister" />
+        <input type="hidden" asp-for="Users" />
+        <div class="button-box button-box-centered">
+            <input type="submit" value="Да" class="button button-danger main-form-btn col-5" />
+            <a class="button main-form-btn col-5" asp-controller="Groups" asp-action="Index">Нет</a>
+        </div>
+    </form>
+</div>
+
