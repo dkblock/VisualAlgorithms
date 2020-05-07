@@ -19,8 +19,8 @@ namespace VisualAlgorithms.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var groups = await _db.Groups.ToListAsync();
-            groups.RemoveAt(0);
+            var groups = await _db.Groups.OrderBy(g => g.Name).ToListAsync();
+            groups.RemoveAll(g => g.Id == 1);
 
             return View(groups);
         }

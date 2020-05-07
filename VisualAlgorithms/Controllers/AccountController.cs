@@ -34,6 +34,7 @@ namespace VisualAlgorithms.Controllers
         {
             var groups = await _db.Groups
                 .Where(g => g.IsAvailableForRegister)
+                .OrderBy(g => g.Name)
                 .ToListAsync();
             var registerModel = new RegisterViewModel {Groups = groups};
 

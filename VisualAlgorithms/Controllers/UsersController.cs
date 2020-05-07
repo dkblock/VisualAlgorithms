@@ -27,7 +27,7 @@ namespace VisualAlgorithms.Controllers
 
         public async Task<IActionResult> Index(int? groupId)
         {
-            var groups = await _db.Groups.ToListAsync();
+            var groups = await _db.Groups.OrderBy(g => g.Name).ToListAsync();
             groups.Insert(0, new Group {Id = 0, Name = "Все"});
 
             var usersList = new List<UserViewModel>();
@@ -85,7 +85,7 @@ namespace VisualAlgorithms.Controllers
                     LastName = user.LastName,
                     GroupId = user.GroupId,
                     Role = userRoles.FirstOrDefault(),
-                    Groups = await _db.Groups.ToListAsync(),
+                    Groups = await _db.Groups.OrderBy(g => g.Name).ToListAsync(),
                     Roles = await _roleManager.Roles.Select(r => r.Name).ToListAsync()
                 };
 

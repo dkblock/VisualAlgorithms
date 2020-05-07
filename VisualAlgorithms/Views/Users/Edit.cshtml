@@ -54,11 +54,15 @@
                     }
                 </select>
             </div>
+            <div class="form-group button-box button-box-centered">
+                <input class="button button-success main-form-btn col-5" type="submit" value="Готово" />
+                <a class="button button-danger main-form-btn col-5" asp-controller="Users" asp-action="Delete" asp-route-id="@Model.Id">Удалить пользователя</a>
+            </div>
         }
-        <div class="form-group button-box button-box-centered">
-            <input class="button button-success main-form-btn col-5" type="submit" value="Готово" />
-            <a class="button button-danger main-form-btn col-5" asp-controller="Users" asp-action="Delete" asp-route-id="@Model.Id">Удалить пользователя</a>
-        </div>
+        else
+        {
+            <input class="button button-success main-form-btn" type="submit" value="Готово" />
+        }
     </form>
 </div>
 
