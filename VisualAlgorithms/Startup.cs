@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using VisualAlgorithms.AppHelpers;
-using VisualAlgorithms.AppMiddleware;
 using VisualAlgorithms.Models;
 using VisualAlgorithms.ViewModels;
 

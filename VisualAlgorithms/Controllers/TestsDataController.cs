@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using VisualAlgorithms.AppMiddleware;
+using VisualAlgorithms.AppHelpers;
 using VisualAlgorithms.Models;
 using VisualAlgorithms.ViewModels;
 

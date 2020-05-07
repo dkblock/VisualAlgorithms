@@ -1,0 +1,17 @@
+﻿@model VisualAlgorithms.Models.ApplicationUser
+@{
+    ViewData["Title"] = "Удаление пользователя";
+}
+
+<div class="main-form-container col-4">
+    <div class="main-form-title text-center">@Model.FirstName @Model.LastName</div>
+    <form class="main-form" asp-action="Delete">
+        <div class="main-form-label text-center">Вы действительно хотите удалить данного пользователя? Все связанные данные также будут удалены!</div>
+        <hr />
+        <input type="hidden" asp-for="Id" />
+        <div class="button-box button-box-centered">
+            <input type="submit" value="Да" class="button button-danger main-form-btn col-5" />
+            <a class="button main-form-btn col-5" asp-controller="Users" asp-action="Edit" asp-route-id="@Model.Id">Нет</a>
+        </div>
+    </form>
+</div>

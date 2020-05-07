@@ -4,7 +4,7 @@ using FluentValidation;
 using VisualAlgorithms.Models;
 using VisualAlgorithms.ViewModels;
 
-namespace VisualAlgorithms.AppMiddleware
+namespace VisualAlgorithms.AppHelpers
 {
     public class TestQuestionViewModelValidator : AbstractValidator<TestQuestionViewModel>
     {

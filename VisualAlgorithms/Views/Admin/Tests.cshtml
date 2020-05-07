@@ -8,15 +8,9 @@
 <table class="table text-center">
     <thead>
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Algorithm.Name)
-        </th>
-        <th>
-            Количество вопросов
-        </th>
+        <th>@Html.DisplayNameFor(model => model.Name)</th>
+        <th>@Html.DisplayNameFor(model => model.Algorithm.Name)</th>
+        <th>Количество вопросов</th>
         <th>
             <a asp-controller="Tests" asp-action="Create">
                 <div class="button button-success main-form-btn">
@@ -30,15 +24,9 @@
     @foreach (var test in Model)
     {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => test.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => test.Algorithm.Name)
-            </td>
-            <td>
-                @test.TestQuestions.Count
-            </td>
+            <td>@test.Name</td>
+            <td>@test.Algorithm.Name</td>
+            <td>@test.TestQuestions.Count</td>
             <td>
                 <a asp-controller="Tests" asp-action="Edit" asp-route-id="@test.Id">
                     <div class="button button-primary table-button">Редактировать</div>

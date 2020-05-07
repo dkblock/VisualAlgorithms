@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using VisualAlgorithms.Models;
 
-namespace VisualAlgorithms.AppMiddleware
+namespace VisualAlgorithms.AppHelpers
 {
     public static class RolesInitializer
     {

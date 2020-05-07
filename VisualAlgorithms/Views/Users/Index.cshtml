@@ -1,0 +1,52 @@
+﻿@model VisualAlgorithms.ViewModels.UsersViewModel
+@{
+    ViewData["Title"] = "Пользователи";
+}
+
+<div class="main-form-title text-center">Пользователи</div>
+<table class="table text-center">
+    <thead>
+    <tr>
+        <th>Фамилия</th>
+        <th>Имя</th>
+        <th>Email</th>
+        <th>
+            <form method="get">
+                <select class="custom-select main-form-label-bold" name="groupId" onchange="this.form.submit()">
+                    @foreach (var group in Model.Groups)
+                    {
+                        if (Model.GroupId == group.Id)
+                        {
+                            <option value="@group.Id" selected>Группа: @group.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@group.Id">Группа: @group.Name</option>
+                        }
+                    }
+                </select>
+            </form>
+        </th>
+        <th>Роль</th>
+        <th>Управление</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var user in Model.Users)
+    {
+        var group = user.Groups.Single(g => g.Id == user.GroupId);
+        <tr>
+            <td>@user.LastName</td>
+            <td>@user.FirstName</td>
+            <td>@user.Email</td>
+            <td>@group.Name</td>
+            <td>@user.Role</td>
+            <td>
+                <a asp-controller="Users" asp-action="Edit" asp-route-id="@user.Id">
+                    <div class="button button-primary table-button">Редактировать</div>
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

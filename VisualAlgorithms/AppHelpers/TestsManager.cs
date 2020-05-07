@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using VisualAlgorithms.Models;
 
-namespace VisualAlgorithms.AppMiddleware
+namespace VisualAlgorithms.AppHelpers
 {
     public class TestsManager
     {

@@ -1,0 +1,64 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model VisualAlgorithms.ViewModels.UserViewModel
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "Редактирование пользователя";
+}
+
+<div class="main-form-container col-6">
+    <div class="main-form-title text-center">@Model.FirstName @Model.LastName</div>
+    <form class="main-form" method="post" asp-controller="Users" asp-action="Edit">
+        <div class="main-form-label text-danger" asp-validation-summary="ModelOnly"></div>
+        <input asp-for="Id" type="hidden" />
+        <div class="form-group">
+            <label asp-for="FirstName" class="main-form-label"></label><br />
+            <input asp-for="FirstName" class="form-control" />
+            <span class="main-form-label text-danger" asp-validation-for="FirstName"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="LastName" class="main-form-label"></label><br />
+            <input asp-for="LastName" class="form-control" />
+            <span class="main-form-label text-danger" asp-validation-for="LastName"></span>
+        </div>
+        <div class="form-group">
+            <label class="main-form-label">Группа</label>
+            <select class="custom-select" asp-for="GroupId">
+                @foreach (var group in Model.Groups)
+                {
+                    if (Model.GroupId == group.Id)
+                    {
+                        <option value="@group.Id" selected>@group.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@group.Id">@group.Name</option>
+                    }
+                }
+            </select>
+        </div>
+        @if (UserManager.GetUserId(User) != Model.Id)
+        {
+            <div class="form-group">
+                <label class="main-form-label">Роль</label>
+                <select class="custom-select" asp-for="Role">
+                    @foreach (var role in Model.Roles)
+                    {
+                        if (Model.Role == role)
+                        {
+                            <option value="@role" selected>@role</option>
+                        }
+                        else
+                        {
+                            <option value="@role">@role</option>
+                        }
+                    }
+                </select>
+            </div>
+        }
+        <div class="form-group button-box button-box-centered">
+            <input class="button button-success main-form-btn col-5" type="submit" value="Готово" />
+            <a class="button button-danger main-form-btn col-5" asp-controller="Users" asp-action="Delete" asp-route-id="@Model.Id">Удалить пользователя</a>
+        </div>
+    </form>
+</div>
+

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using VisualAlgorithms.Models;
 
-namespace VisualAlgorithms.AppMiddleware
+namespace VisualAlgorithms.AppHelpers
 {
     public static class DataInitializer
     {

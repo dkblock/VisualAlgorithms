@@ -259,6 +259,12 @@ pre {
     font-weight: 600;
 }
 
+.main-form-label-bold {
+    font-size: 15px;
+    font-weight: bold;
+    color: #000;
+}
+
 .table-button {
     width: 100%;
 }
