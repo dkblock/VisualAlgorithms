@@ -1,7 +1,8 @@
 ﻿@model VisualAlgorithms.Models.UserAnswer
 
 @{
-    ViewData["Title"] = "Passing";
+    var title = $"Вопрос {ViewBag.QuestionNumber}";
+    ViewData["Title"] = title;
 }
 
 <div class="question-container">

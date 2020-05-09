@@ -10,7 +10,7 @@
         <tr>
             <th>Название теста</th>
             <th>Алгоритм</th>
-            <th>Результат (%)</th>
+            <th>Результат</th>
             <th>Время прохождения</th>
         </tr>
         </thead>
@@ -20,7 +20,7 @@
             <tr>
                 <td>@item.Test.Name</td>
                 <td>@item.Test.Algorithm.Name</td>
-                <td>@item.Result</td>
+                <td>@(item.Result)%</td>
                 <td>@item.PassingTime</td>
             </tr>
         }

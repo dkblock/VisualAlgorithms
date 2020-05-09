@@ -13,5 +13,7 @@ namespace VisualAlgorithms.ViewModels
         public int? TestId { get; set; }
         public int? GroupId { get; set; }
         public int? OrderBy { get; set; }
+        public int DeletedTestId { get; set; }
+        public string DeletedUserId { get; set; }
     }
 }

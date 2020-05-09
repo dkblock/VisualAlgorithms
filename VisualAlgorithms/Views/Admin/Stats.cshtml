@@ -81,8 +81,9 @@
             <th>Группа</th>
             <th>Название теста</th>
             <th>Алгоритм</th>
-            <th>Результат (%)</th>
+            <th>Результат</th>
             <th>Время прохождения</th>
+            <th>Управление</th>
         </tr>
         </thead>
         <tbody>
@@ -94,8 +95,19 @@
                 <td>@item.User.Group.Name</td>
                 <td>@item.Test.Name</td>
                 <td>@item.Test.Algorithm.Name</td>
-                <td>@item.Result</td>
+                <td>@(item.Result)%</td>
                 <td>@item.PassingTime</td>
+                <td>
+                    <form method="post" asp-controller="Admin" asp-action="Stats">
+                        <input asp-for="@Model.TestId" type="hidden" />
+                        <input asp-for="@Model.GroupId" type="hidden" />
+                        <input asp-for="@Model.AlgorithmId" type="hidden" />
+                        <input asp-for="@Model.OrderBy" type="hidden" />
+                        <input asp-for="@Model.DeletedTestId" type="hidden" value="@item.TestId" />
+                        <input asp-for="@Model.DeletedUserId" type="hidden" value="@item.UserId" />
+                        <input type="submit" class="button button-danger main-form-btn" value="Удалить" />
+                    </form>
+                </td>
             </tr>
         }
         </tbody>

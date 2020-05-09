@@ -133,9 +133,13 @@ namespace VisualAlgorithms.Controllers
             var test = await _db.Tests
                 .Include(t => t.TestQuestions)
                 .Include(t => t.Algorithm)
-                .SingleAsync(t => t.Id == id);
+                .Include(t => t.UserTests)
+                .SingleOrDefaultAsync(t => t.Id == id);
 
-            return View(test);
+            if (test != null)
+                return View(test);
+
+            return NotFound();
         }
 
         [Authorize(Roles = "admin, user")]
@@ -151,13 +155,20 @@ namespace VisualAlgorithms.Controllers
             var test = await _db.Tests
                 .Include(t => t.TestQuestions)
                 .ThenInclude(tq => tq.TestAnswers)
-                .SingleAsync(t => t.Id == testId);
+                .SingleOrDefaultAsync(t => t.Id == testId);
+
+            if (test == null) 
+                return NotFound();
 
             var testQuestion = questionId == null
                 ? test.TestQuestions.First()
-                : test.TestQuestions.Single(q => q.Id == questionId);
+                : test.TestQuestions.SingleOrDefault(q => q.Id == questionId);
 
-             _testsManager.MixTestAnswers(testQuestion.TestAnswers);
+            if (testQuestion == null)
+                return NotFound();
+
+            ViewBag.QuestionNumber = test.TestQuestions.IndexOf(testQuestion) + 1;
+            _testsManager.MixTestAnswers(testQuestion.TestAnswers);
 
             var userAnswer = new UserAnswer
             {
@@ -166,6 +177,7 @@ namespace VisualAlgorithms.Controllers
             };
 
             return View(userAnswer);
+
         }
 
         [Authorize(Roles = "admin, user")]
@@ -177,6 +189,9 @@ namespace VisualAlgorithms.Controllers
                 .Include(q => q.Test)
                 .ThenInclude(t => t.TestQuestions)
                 .SingleAsync(q => q.Id == userAnswer.TestQuestionId);
+
+            if (await _db.UserAnswers.AnyAsync(ua => ua.UserId == userId && ua.TestQuestionId == question.Id))
+                return RedirectToAction("Index");
 
             userAnswer.UserId = userId;
             await _testsManager.ProcessUserAnswer(userAnswer);

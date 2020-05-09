@@ -11,7 +11,7 @@
         <input type="hidden" asp-for="Id"/>
 
         <div class="form-group">
-            <label class="main-form-label" asp-for="Name" class="main-form-label"></label>
+            <label asp-for="Name" class="main-form-label"></label>
             <input asp-for="Name" value="@Model.Name" class="form-control"/>
             <span asp-validation-for="Name" class="main-form-label text-danger"></span>
         </div>

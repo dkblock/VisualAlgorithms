@@ -9,7 +9,7 @@ namespace VisualAlgorithms.Models
         public int Id { get; set; }
 
         [Required]
-        [Display(Name = "Структура данных")]
+        [Display(Name = "Алгоритм")]
         public string Name { get; set; }
 
         public string ImageUrl { get; set; }

@@ -80,5 +80,33 @@ namespace VisualAlgorithms.Controllers
 
             return View(statsModel);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Stats(AdminStatsViewModel statsModel)
+        {
+            var userTest = await _db.UserTests.FindAsync(statsModel.DeletedTestId, statsModel.DeletedUserId);
+
+            if (userTest != null)
+            {
+                var userAnswers = await _db.UserAnswers
+                    .Include(ua => ua.TestQuestion)
+                    .Where(ua => ua.UserId == statsModel.DeletedUserId && ua.TestQuestion.TestId == statsModel.DeletedTestId)
+                    .ToListAsync();
+
+                _db.UserAnswers.RemoveRange(userAnswers);
+                _db.UserTests.Remove(userTest);
+                await _db.SaveChangesAsync();
+
+                return RedirectToAction("Stats", new
+                {
+                    algorithmId = statsModel.AlgorithmId,
+                    testId = statsModel.TestId,
+                    groupId = statsModel.GroupId,
+                    orderBy = statsModel.OrderBy
+                });
+            }
+
+            return NotFound();
+        }
     }
 }

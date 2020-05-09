@@ -4,32 +4,24 @@
     ViewData["Title"] = "Результат";
 }
 
-<h1>Result</h1>
-
-<div>
-    <h4>UserTest</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TotalQuestions)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TotalQuestions)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CorrectAnswers)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CorrectAnswers)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Result)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Result)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a class="btn btn-primary" asp-controller="Tests" asp-action="Index">Готово</a>
+<div class="main-form-container col-4">
+    <div class="main-form-title text-center">Результат</div>
+    <div class="main-form">
+        <dl class="row">
+            <dt class="col-sm-9">
+                <label asp-for="TotalQuestions"></label>
+            </dt>
+            <dd class="col-sm-3">@Model.TotalQuestions</dd>
+            <dt class="col-sm-9">
+                <label asp-for="CorrectAnswers"></label>
+            </dt>
+            <dd class="col-sm-3">@Model.CorrectAnswers</dd>
+            <dt class="col-sm-9">
+                <label asp-for="Result"></label>
+            </dt>
+            <dd class="col-sm-3">@(Model.Result)%</dd>
+        </dl>
+        <hr />
+        <a class="button button-primary main-form-btn" asp-controller="Tests" asp-action="Index">Готово</a>
+    </div>
 </div>
