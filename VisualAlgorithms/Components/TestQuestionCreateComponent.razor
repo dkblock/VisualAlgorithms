@@ -85,8 +85,9 @@
             </div>
         }
 
-        <div class="form-group">
-            <button type="submit" class="button button-primary">Далее</button>
+        <div class="button-box">
+            <div class="col-5"></div>
+            <button type="submit" class="button button-primary main-form-btn col-5">Далее</button>
         </div>
     </EditForm>
 
@@ -111,7 +112,7 @@
     [Parameter]
     public TestQuestionViewModel QuestionModel { get; set; }
 
-    private const string DefaultStatus = "Загрузить изображение";
+        private const string DefaultStatus = "Загрузить изображение";
     private HttpClient _client;
     private string _imageName;
     private int _answersCount = 1;

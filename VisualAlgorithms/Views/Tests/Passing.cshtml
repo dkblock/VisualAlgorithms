@@ -5,56 +5,26 @@
     ViewData["Title"] = title;
 }
 
-<div class="question-container">
-    <form asp-controller="Tests" asp-action="Passing" class="col-md-6 question-form">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        @Html.HiddenFor(modelItem => Model.TestQuestion)
-        @Html.HiddenFor(modelItem => Model.TestQuestionId)
-        <div class="form-group">
-            <label asp-for="TestQuestion.Question" class="control-label">@Model.TestQuestion.Question</label>
+@if (!string.IsNullOrEmpty(Model.TestQuestion.Image))
+{
+    <div class="main-form-container">
+        <div class="main-form-title text-center">@title</div>
+        <div class="question-container">
+            <div class="main-form col-6">
+                @{ await Html.RenderPartialAsync("_PassingTestQuestion", Model);}
+            </div>
+            <div class="col-6 question-img-container">
+                <img class="test-img-bordered" src="images/test-questions/@Model.TestQuestion.Image" alt="img" />
+            </div>
         </div>
-
-        @if (Model.TestQuestion.TestQuestionType == TestQuestionType.FreeAnswer)
-        {
-            <div class="form-group">
-                <label class="control-label">Введите ответ</label>
-                <input asp-for="Answer" class="form-control"/>
-                <span asp-validation-for="Answer" class="text-danger"></span>
-            </div>
-        }
-        else
-        {
-            <div class="form-group">
-                <label class="control-label">Выберите правильный ответ</label>
-                @foreach (var answer in Model.TestQuestion.TestAnswers)
-                {
-                    <p>
-                        <input type="radio" asp-for="Answer" value="@answer.Id.ToString()"/>
-                        @answer.Answer
-                    </p>
-                }
-                <span asp-validation-for="Answer" class="text-danger"></span>
-            </div>
-        }
-
-        @if (!Model.TestQuestion.IsLastQuestion)
-        {
-            <div class="form-group">
-                <input type="submit" value="Следующий вопрос" class="btn btn-outline-primary"/>
-            </div>
-        }
-        else
-        {
-            <div class="form-group">
-                <input type="submit" value="Завершить" class="btn btn-primary"/>
-            </div>
-        }
-    </form>
-
-    @if (Model.TestQuestion.Image != null)
-    {
-        <div class="col-md-6 question-img-container">
-            <img class="test-img-bordered" src="images/test-questions/@Model.TestQuestion.Image" alt="img"/>
+    </div>
+}
+else
+{
+    <div class="main-form-container col-6">
+        <div class="main-form-title text-center">@title</div>
+        <div class="main-form">
+            @{ await Html.RenderPartialAsync("_PassingTestQuestion", Model);}
         </div>
-    }
-</div>
+    </div>
+}

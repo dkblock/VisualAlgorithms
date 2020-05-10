@@ -265,6 +265,11 @@ pre {
     color: #000;
 }
 
+.main-link {
+    font-size: 20px;
+    color: #1E90FF;
+}
+
 .table-button {
     width: 100%;
 }

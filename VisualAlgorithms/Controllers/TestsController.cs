@@ -147,10 +147,10 @@ namespace VisualAlgorithms.Controllers
         public async Task<IActionResult> Passing(int testId, int? questionId)
         {
             if (questionId == null)
-            {
-                var userId = _userManager.GetUserId(User);
-                await _testsManager.ClearUserTestResult(testId, userId);
-            }
+                await _testsManager.CheckUserTest(testId, GetUserId());
+
+            if (await _testsManager.CheckUserAnswer(testId, questionId, GetUserId()))
+                return RedirectToAction("Index");
 
             var test = await _db.Tests
                 .Include(t => t.TestQuestions)
@@ -210,6 +210,31 @@ namespace VisualAlgorithms.Controllers
                 .First();
 
             return RedirectToAction("Passing", new { testId = test.Id, questionId = nextQuestion.Id });
+        }
+
+        [Authorize(Roles = "admin, user")]
+        [HttpGet]
+        public async Task<IActionResult> PreviousQuestionPassing(int id)
+        {
+            var currentQuestion = await _db.TestQuestions.FindAsync(id);
+
+            if (currentQuestion == null)
+                return NotFound();
+
+            var questions = await _db.TestQuestions
+                .Where(tq => tq.TestId == currentQuestion.TestId)
+                .ToListAsync();
+            var previousQuestion = questions.TakeWhile(q => q.Id != id).LastOrDefault();
+            var userId = GetUserId();
+
+            if (previousQuestion == null)
+                return NotFound();
+
+            var userAnswer = await _db.UserAnswers.FindAsync(previousQuestion.Id, userId);
+            _db.UserAnswers.Remove(userAnswer);
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Passing", new {testId = previousQuestion.TestId, questionId = previousQuestion.Id});
         }
 
         [Authorize(Roles = "admin, user")]

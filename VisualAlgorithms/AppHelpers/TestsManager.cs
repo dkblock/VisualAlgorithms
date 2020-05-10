@@ -61,21 +61,47 @@ namespace VisualAlgorithms.AppHelpers
             return userResult.Entity;
         }
 
-        public async Task ClearUserTestResult(int testId, string userId)
+        public async Task CheckUserTest(int testId, string userId)
         {
             var userTest = await _db.UserTests.FindAsync(testId, userId);
+            var testQuestions = await _db.TestQuestions
+                .Where(tq => tq.TestId == testId)
+                .ToListAsync();
+            var userAnswers = await _db.UserAnswers
+                .Include(ua => ua.TestQuestion)
+                .Where(ua => ua.UserId == userId && ua.TestQuestion.TestId == testId)
+                .ToListAsync();
+
+            if (userAnswers.Count == testQuestions.Count)
+                return;
+
+            if (userAnswers.Any())
+            {
+                _db.UserAnswers.RemoveRange(userAnswers);
+                await _db.SaveChangesAsync();
+            }
 
             if (userTest != null)
             {
-                var userAnswers = await _db.UserAnswers
-                    .Include(ua => ua.TestQuestion)
-                    .Where(ua => ua.UserId == userId && ua.TestQuestion.TestId == testId)
-                    .ToListAsync();
-
-                _db.UserAnswers.RemoveRange(userAnswers);
                 _db.UserTests.Remove(userTest);
                 await _db.SaveChangesAsync();
             }
+        }
+
+        public async Task<bool> CheckUserAnswer(int testId, int? questionId, string userId)
+        {
+            var testQuestions = await _db.TestQuestions
+                .Where(tq => tq.TestId == testId)
+                .ToListAsync();
+
+            var testQuestion = questionId == null
+                ? testQuestions.FirstOrDefault()
+                : testQuestions.SingleOrDefault(tq => tq.Id == questionId);
+
+            if (testQuestion != null)
+                return await _db.UserAnswers.AnyAsync(ua => ua.TestQuestionId == testQuestion.Id && ua.UserId == userId);
+
+            return true;
         }
 
         public void MixTestAnswers(List<TestAnswer> testAnswers)

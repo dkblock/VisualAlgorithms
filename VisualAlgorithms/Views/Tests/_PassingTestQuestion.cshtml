@@ -1,0 +1,54 @@
+﻿@model VisualAlgorithms.Models.UserAnswer
+@{
+    var submitBtnValue = Model.TestQuestion.IsLastQuestion ? "Завершить тест" : "Следующий вопрос >>";
+}
+
+<form asp-controller="Tests" asp-action="Passing">
+    <div asp-validation-summary="ModelOnly" class="main-form-label text-danger"></div>
+    <input asp-for="TestQuestion" type="hidden"/>
+    <input asp-for="TestQuestionId" type="hidden"/>
+    <div class="form-group">
+        <label class="main-form-label">Вопрос</label><br/>
+        <label>@Model.TestQuestion.Question</label>
+    </div>
+    <hr/>
+
+    @if (Model.TestQuestion.TestQuestionType == TestQuestionType.FreeAnswer)
+    {
+        <div class="form-group">
+            <label class="main-form-label">Введите ответ</label>
+            <input asp-for="Answer" class="form-control"/>
+            <span asp-validation-for="Answer" class="main-form-label text-danger"></span>
+        </div>
+    }
+    else
+    {
+        <div class="form-group">
+            <label class="main-form-label">Выберите правильный ответ</label>
+            <div class="main-form">
+                @foreach (var answer in Model.TestQuestion.TestAnswers)
+                {
+                    <input type="radio" asp-for="Answer" value="@answer.Id.ToString()" id="@answer.Id.ToString()"/>
+                    <label for="@answer.Id.ToString()">@answer.Answer</label>
+                    <br/>
+                }
+            </div>
+            <span asp-validation-for="Answer" class="main-form-label text-danger"></span>
+        </div>
+    }
+
+    <div class="button-box">
+        @if (ViewBag.QuestionNumber > 1)
+        {
+            <a class="button main-form-btn col-5" asp-controller="Tests" asp-action="PreviousQuestionPassing" asp-route-id="@Model.TestQuestionId">
+                &lt;&lt; Предыдущий вопрос
+            </a>
+            <input type="submit" value="@submitBtnValue" class="button button-primary col-5 main-form-btn"/>
+        }
+        else
+        {
+            <div class="col-5"></div>
+            <input type="submit" value="@submitBtnValue" class="button button-primary col-5 main-form-btn"/>
+        }
+    </div>
+</form>

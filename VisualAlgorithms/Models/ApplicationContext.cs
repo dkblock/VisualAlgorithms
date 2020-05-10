@@ -42,6 +42,9 @@ namespace VisualAlgorithms.Models
                 .HasForeignKey(ta => ta.TestQuestionId);
 
             builder.Entity<UserAnswer>()
+                .HasKey(ua => new { ua.TestQuestionId, ua.UserId });
+
+            builder.Entity<UserAnswer>()
                 .HasOne(ua => ua.TestQuestion)
                 .WithMany(tq => tq.UserAnswers)
                 .HasForeignKey(ua => ua.TestQuestionId);

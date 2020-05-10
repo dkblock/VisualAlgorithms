@@ -99,17 +99,18 @@
                 <td>@item.PassingTime</td>
                 <td>
                     <form method="post" asp-controller="Admin" asp-action="Stats">
-                        <input asp-for="@Model.TestId" type="hidden" />
-                        <input asp-for="@Model.GroupId" type="hidden" />
-                        <input asp-for="@Model.AlgorithmId" type="hidden" />
-                        <input asp-for="@Model.OrderBy" type="hidden" />
-                        <input asp-for="@Model.DeletedTestId" type="hidden" value="@item.TestId" />
-                        <input asp-for="@Model.DeletedUserId" type="hidden" value="@item.UserId" />
-                        <input type="submit" class="button button-danger main-form-btn" value="Удалить" />
+                        <input asp-for="@Model.TestId" type="hidden"/>
+                        <input asp-for="@Model.GroupId" type="hidden"/>
+                        <input asp-for="@Model.AlgorithmId" type="hidden"/>
+                        <input asp-for="@Model.OrderBy" type="hidden"/>
+                        <input asp-for="@Model.DeletedTestId" type="hidden" value="@item.TestId"/>
+                        <input asp-for="@Model.DeletedUserId" type="hidden" value="@item.UserId"/>
+                        <input type="submit" class="button button-danger main-form-btn" value="Удалить"/>
                     </form>
                 </td>
             </tr>
         }
         </tbody>
     </table>
+    <a class="main-link" asp-controller="Admin" asp-action="Index"><< Назад</a>
 </div>
