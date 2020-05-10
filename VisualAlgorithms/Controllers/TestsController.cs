@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VisualAlgorithms.AppHelpers;
 using VisualAlgorithms.Models;
+using VisualAlgorithms.ViewModels;
 
 namespace VisualAlgorithms.Controllers
 {
@@ -30,14 +32,46 @@ namespace VisualAlgorithms.Controllers
             _testsManager = testsManager;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? testsType, int? algorithmId, int? orderBy)
         {
+            var testTypes = new List<string> { "Все", "Только выполненные", "Только невыполненные" };
+            var algorithms = await _db.Algorithms.ToListAsync();
+            algorithms.Insert(0, new Algorithm { Id = 0, Name = "Все" });
+
             var tests = await _db.Tests
                 .Include(t => t.TestQuestions)
                 .Include(t => t.Algorithm)
+                .OrderBy(t => t.Name)
+                .ThenBy(t => t.AlgorithmId)
                 .ToListAsync();
 
-            return View(tests);
+            var userTests = await _db.UserTests
+                .Where(ut => ut.UserId == GetUserId())
+                .ToListAsync();
+
+            if (testsType != null && testsType != 0)
+                tests = testsType == 1 
+                    ? tests.Where(t => userTests.Any(ut => ut.TestId == t.Id)).ToList() 
+                    : tests.Where(t => userTests.All(ut => ut.TestId != t.Id)).ToList();
+
+            if (algorithmId != null && algorithmId != 0)
+                tests = tests.Where(t => t.AlgorithmId == algorithmId).ToList();
+
+            if (orderBy != null && orderBy != 0)
+                tests = tests.OrderBy(t => t.Algorithm.Name).ToList();
+
+            var testsModel = new TestsViewModel
+            {
+                Tests = tests,
+                UserTests = userTests,
+                Algorithms = algorithms,
+                TestTypes = testTypes,
+                AlgorithmId = algorithmId,
+                TestsType = testsType,
+                OrderBy = orderBy
+            };
+
+            return View(testsModel);
         }
 
         [Authorize(Roles = "admin")]

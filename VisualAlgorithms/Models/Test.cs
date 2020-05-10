@@ -9,6 +9,7 @@ namespace VisualAlgorithms.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Введите название!")]
+        [StringLength(50, ErrorMessage = "Название теста должно содержать от 3 до 50 символов!", MinimumLength = 3)]
         [Display(Name = "Название теста")]
         public string Name { get; set; }
 

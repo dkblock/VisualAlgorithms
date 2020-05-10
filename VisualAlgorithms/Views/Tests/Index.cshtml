@@ -1,31 +1,108 @@
-﻿@model IEnumerable<VisualAlgorithms.Models.Test>
+﻿@model VisualAlgorithms.ViewModels.TestsViewModel
 @{
     ViewData["Title"] = "Тесты";
 }
 
 <div class="main-form-title text-center">Тесты</div>
-<table class="table text-center">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Algorithm.Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var test in Model)
+<form class="main-form button-box card-deck-row" method="get">
+    <div class="form-group">
+        <label class="main-form-label">Тесты</label>
+        <select class="custom-select" name="testsType" onchange="this.form.submit()">
+            @for (var i = 0; i < Model.TestTypes.Count; i++)
+            {
+                if (Model.TestsType == i)
+                {
+                    <option value="@i" selected>@Model.TestTypes[i]</option>
+                }
+                else
+                {
+                    <option value="@i">@Model.TestTypes[i]</option>
+                }
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label class="main-form-label">Алгоритм</label>
+        <select class="custom-select" name="algorithmId" onchange="this.form.submit()">
+            @foreach (var algorithm in Model.Algorithms)
+            {
+                if (Model.AlgorithmId == algorithm.Id)
+                {
+                    <option value="@algorithm.Id" selected>@algorithm.Name</option>
+                }
+                else
+                {
+                    <option value="@algorithm.Id">@algorithm.Name</option>
+                }
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label class="main-form-label">Упорядочить по</label>
+        <select class="custom-select" name="orderBy" onchange="this.form.submit()">
+            @if (Model.OrderBy == 1)
+            {
+                <option value="0">Название</option>
+                <option value="1" selected>Алгоритм</option>
+            }
+            else
+            {
+                <option value="0" selected>Название</option>
+                <option value="1">Алгоритм</option>
+            }
+        </select>
+    </div>
+</form>
+
+@for (var i = 0; i < Model.Tests.Count; i += 4)
+{
+    if (i < Model.Tests.Count)
     {
-        <tr>
-            <td>@test.Name</td>
-            <td>@test.Algorithm.Name</td>
-            <td>
-                <a class="button button-primary table-button" asp-controller="Tests" asp-action="Info" asp-route-id="@test.Id">Начать</a>
-            </td>
-        </tr>
+        <div class="card-deck card-deck-row">
+            @for (var j = i; j < i + 4; j++)
+            {
+                if (j < Model.Tests.Count)
+                {
+                    var test = Model.Tests[j];
+                    var isPassed = Model.UserTests.Any(ut => ut.TestId == test.Id);
+                    var className = isPassed ? "text-success" : "text-muted";
+                    var status = isPassed ? "Выполнено" : "Не выполнено";
+
+                    <div class="card">
+                        <img class="card-img" src="images/@test.Algorithm.ImageUrl" alt="Algorithm image">
+                        <div class="card-body card-body-bordered card-body-container">
+                            <h6 class="card-title">@test.Name</h6>
+                            <div>
+                                <hr/>
+                                <div class="main-form-label">@test.Algorithm.Name</div>
+                                <div class="main-form-label">Вопросов: @test.TestQuestions.Count</div>
+                                <hr/>
+                                @if (!isPassed)
+                                {
+                                    <a class="button button-primary table-button" asp-controller="Tests" asp-action="Passing" asp-route-testId="@test.Id">
+                                        Начать
+                                    </a>
+                                }
+                                else
+                                {
+                                    <div class="main-form-label card-test-result">
+                                        Результат: @(Model.UserTests.Single(ut => ut.TestId == test.Id).Result)%
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <small class="@className">@status</small>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="card card-hidden"></div>
+                }
+            }
+        </div>
     }
-    </tbody>
-</table>
+}

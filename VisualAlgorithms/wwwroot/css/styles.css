@@ -2,6 +2,24 @@
 
 .card-body-btn { width: 135px; }
 
+.card-body-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between
+}
+
+.card-deck-row {
+    margin-bottom: 25px;
+}
+
+.card-hidden {
+    border: none;
+}
+
+.card-test-result {
+   padding: 7px 0;
+}
+
 .home-carousel {
     width: 100%;
     margin: 0 auto;
@@ -98,6 +116,10 @@ pre {
 }
 
 .button-box-centered { justify-content: space-evenly; }
+
+.button-box-started {
+    justify-content: flex-start
+}
 
 .button {
     border: 1px solid #ced4da;
