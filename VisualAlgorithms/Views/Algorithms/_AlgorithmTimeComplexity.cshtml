@@ -1,0 +1,64 @@
+﻿@model VisualAlgorithms.Models.AlgorithmTimeComplexity
+
+<h6 class="text-center">Временная сложность</h6>
+<table class="table table-bordered text-center description-table">
+    <thead>
+    <tr>
+        <th>Операция</th>
+        <th>В среднем</th>
+        <th>В худшем</th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (Model.SortingAverageTime != null)
+    {
+        <tr>
+            <td>
+                <label asp-for="SortingAverageTime"></label>
+            </td>
+            <td>@Model.SortingAverageTime</td>
+            <td>@Model.SortingWorstTime</td>
+        </tr>
+    }
+    @if (Model.IndexingAverageTime != null)
+    {
+    <tr>
+        <td>
+            <label asp-for="IndexingAverageTime"></label>
+        </td>
+        <td>@Model.IndexingAverageTime</td>
+        <td>@Model.IndexingWorstTime</td>
+    </tr>
+    }
+    @if (Model.SearchingAverageTime != null)
+    {
+    <tr>
+        <td>
+            <label asp-for="SearchingAverageTime"></label>
+        </td>
+        <td>@Model.SearchingAverageTime</td>
+        <td>@Model.SearchingWorstTime</td>
+    </tr>
+    }
+    @if (Model.InsertionAverageTime != null)
+    {
+    <tr>
+        <td>
+            <label asp-for="InsertionAverageTime"></label>
+        </td>
+        <td>@Model.InsertionAverageTime</td>
+        <td>@Model.InsertionWorstTime</td>
+    </tr>
+    }
+    @if (Model.DeletionAverageTime != null)
+    {
+    <tr>
+        <td>
+            <label asp-for="DeletionAverageTime"></label>
+        </td>
+        <td>@Model.DeletionAverageTime</td>
+        <td>@Model.DeletionWorstTime</td>
+    </tr>
+    }
+    </tbody>
+</table>

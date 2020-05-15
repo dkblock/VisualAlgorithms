@@ -1,0 +1,14 @@
+﻿@model VisualAlgorithms.Models.ApplicationUser
+@{
+    ViewData["Title"] = "Добро пожаловать!";
+}
+
+<div class="main-form-container col-8">
+    <div class="main-form-title text-center">Добро пожаловать!</div>
+    <p class="description-paragraph main-form-label-lg">
+        Благодарим Вас за регистрацию на сайте Visual Algorithms!<br />
+        На Ваш почтовый ящик (@Model.Email) было отправлено сообщение, содержащее ссылку для подтверждения e-mail адреса.<br />
+        Пожалуйста, перейдите по этой ссылке для завершения регистрации.<br />
+        Если Вы не обнаружите письмо, проверьте папку "Спам" - возможно, оно попало туда по ошибке.
+    </p>
+</div>

@@ -7,34 +7,34 @@ namespace VisualAlgorithms.Models
         [Key]
         public int Id { get; set; }
 
-        [Display(Name = "Сортировка (в среднем)")]
+        [Display(Name = "Сортировка")]
         public string SortingAverageTime { get; set; }
 
-        [Display(Name = "Сортировка (в худшем)")]
+        [Display(Name = "Сортировка")]
         public string SortingWorstTime { get; set; }
 
-        [Display(Name = "Индексация (в среднем)")]
+        [Display(Name = "Индексация")]
         public string IndexingAverageTime { get; set; }
 
-        [Display(Name = "Индексация (в худшем)")]
+        [Display(Name = "Индексация")]
         public string IndexingWorstTime { get; set; }
 
-        [Display(Name = "Поиск (в среднем)")]
+        [Display(Name = "Поиск")]
         public string SearchingAverageTime { get; set; }
 
-        [Display(Name = "Поиск (в худшем)")]
+        [Display(Name = "Поиск")]
         public string SearchingWorstTime { get; set; }
 
-        [Display(Name = "Вставка (в среднем)")]
+        [Display(Name = "Вставка")]
         public string InsertionAverageTime { get; set; }
 
-        [Display(Name = "Вставка (в худшем)")]
+        [Display(Name = "Вставка")]
         public string InsertionWorstTime { get; set; }
 
-        [Display(Name = "Удаление (в среднем)")]
+        [Display(Name = "Удаление")]
         public string DeletionAverageTime { get; set; }
 
-        [Display(Name = "Удаление (в худшем)")]
+        [Display(Name = "Удаление")]
         public string DeletionWorstTime { get; set; }
 
         public int AlgorithmId { get; set; }

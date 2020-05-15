@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using VisualAlgorithms.AppHelpers;
 using VisualAlgorithms.Models;
 using VisualAlgorithms.ViewModels;
 
@@ -14,13 +15,18 @@ namespace VisualAlgorithms.Controllers
         private readonly ApplicationContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly EmailService _emailService;
 
-        public AccountController(ApplicationContext db, UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+        public AccountController(
+            ApplicationContext db, 
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            EmailService emailService)
         {
             _db = db;
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailService = emailService;
         }
 
         [Authorize]
@@ -59,9 +65,21 @@ namespace VisualAlgorithms.Controllers
 
                 if (result.Succeeded)
                 {
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var callbackUrl = Url.Action(
+                        "ConfirmEmail",
+                        "Account",
+                        new { userId = user.Id, code = code },
+                        HttpContext.Request.Scheme);
+
                     await _userManager.AddToRoleAsync(user, "user");
                     await _signInManager.SignInAsync(user, false);
-                    return RedirectToAction("Index", "Home");
+                    await _emailService.SendEmailAsync(model.Email, "Регистрация на Visual Algorithms",
+                        $"Здравствуйте, {user.FirstName} {user.LastName}!<br/>" +
+                        "Благодарим Вас за регистрацию на сайте Visual Algorithms. <br/>" +
+                        $"Чтобы подтвердить свой адрес электронной почты, <a href='{callbackUrl}'>перейдите по этой ссылке</a>.");
+
+                    return RedirectToAction("Welcome", "Account");
                 }
 
                 foreach (var error in result.Errors)
@@ -69,6 +87,38 @@ namespace VisualAlgorithms.Controllers
             }
 
             return View(model);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Welcome()
+        {
+            var userId = _userManager.GetUserId(User);
+            var user = await _db.Users.FindAsync(userId);
+
+            if (await _userManager.IsEmailConfirmedAsync(user))
+                return RedirectToAction("Index", "Home");
+
+            return View(user);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+                return NotFound();
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                return NotFound();
+
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+
+            if (result.Succeeded)
+                return RedirectToAction("Index", "Home");
+            
+            return NotFound();
         }
 
         [HttpGet]

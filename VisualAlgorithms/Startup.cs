@@ -36,10 +36,12 @@ namespace VisualAlgorithms
                     options.Password.RequireUppercase = false;
                     options.Password.RequireDigit = false;
                 })
-                .AddEntityFrameworkStores<ApplicationContext>();
+                .AddEntityFrameworkStores<ApplicationContext>()
+                .AddDefaultTokenProviders();
 
             services.AddScoped<AccessManager, AccessManager>();
             services.AddScoped<TestsManager, TestsManager>();
+            services.AddScoped<EmailService, EmailService>();
             services.AddTransient<IValidator<TestQuestionViewModel>, TestQuestionViewModelValidator>();
             services.AddTransient<IValidator<TestAnswer>, TestAnswerValidator>();
 

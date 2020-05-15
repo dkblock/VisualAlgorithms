@@ -21,13 +21,16 @@ namespace VisualAlgorithms.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Info(int id)
+        public async Task<IActionResult> Info(string id)
         {
             var algorithm = await _db.Algorithms
                 .Include(al => al.AlgorithmTimeComplexity)
-                .SingleAsync(al => al.Id == id);
+                .SingleOrDefaultAsync(al => al.Tag == id);
 
-            return View(algorithm);
+            if (algorithm != null)
+                return View(algorithm);
+
+            return NotFound();
         }
     }
 }

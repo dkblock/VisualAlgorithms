@@ -162,20 +162,6 @@ namespace VisualAlgorithms.Controllers
             return RedirectToAction("Tests", "Admin");
         }
 
-        public async Task<IActionResult> Info(int id)
-        {
-            var test = await _db.Tests
-                .Include(t => t.TestQuestions)
-                .Include(t => t.Algorithm)
-                .Include(t => t.UserTests)
-                .SingleOrDefaultAsync(t => t.Id == id);
-
-            if (test != null)
-                return View(test);
-
-            return NotFound();
-        }
-
         [Authorize(Roles = "admin, user")]
         [HttpGet]
         public async Task<IActionResult> Passing(int testId, int? questionId)

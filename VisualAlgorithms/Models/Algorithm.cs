@@ -9,6 +9,9 @@ namespace VisualAlgorithms.Models
         public int Id { get; set; }
 
         [Required]
+        public string Tag { get; set; }
+
+        [Required]
         [Display(Name = "Алгоритм")]
         public string Name { get; set; }
 

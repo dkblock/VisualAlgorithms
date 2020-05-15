@@ -12,10 +12,10 @@
             <div class="card-body card-body-bordered">
                 <h5 class="card-title">@algorithm.Name</h5>
                 <div class="button-box">
-                    <a class="button col-5" asp-controller="Algorithms" asp-action="Info" asp-route-id="@algorithm.Id">
+                    <a class="button col-5" asp-controller="Algorithms" asp-action="Info" asp-route-id="@algorithm.Tag">
                         Информация
                     </a>
-                    <a class="button button-primary col-5" asp-controller="Constructor" asp-action="Module" asp-route-id="@algorithm.Id">
+                    <a class="button button-primary col-5" asp-controller="Constructor" asp-action="Module" asp-route-id="@algorithm.Tag">
                         Конструктор
                     </a>
                 </div>

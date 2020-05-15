@@ -16,16 +16,19 @@ namespace VisualAlgorithms.AppHelpers
                     new Algorithm
                     {
                         Name = "Бинарное дерево поиска",
+                        Tag = "binary-tree",
                         ImageUrl = "binary-tree.png"
                     },
                     new Algorithm
                     {
                         Name = "AVL-дерево",
+                        Tag = "avl-tree",
                         ImageUrl = "avl-tree.png"
                     },
                     new Algorithm
                     {
                         Name = "Красно-чёрное дерево",
+                        Tag = "red-black-tree",
                         ImageUrl = "red-black-tree.png"
                     }
                 };

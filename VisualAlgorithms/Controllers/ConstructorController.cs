@@ -20,10 +20,14 @@ namespace VisualAlgorithms.Controllers
             return View(algorithms);
         }
 
-        public async Task<IActionResult> Module(int id)
+        public async Task<IActionResult> Module(string id)
         {
-            var algorithm = await _db.Algorithms.FindAsync(id);
-            return View(algorithm);
+            var algorithm = await _db.Algorithms.SingleOrDefaultAsync(al => al.Tag == id);
+
+            if (algorithm != null)
+                return View(algorithm);
+
+            return NotFound();
         }
     }
 }

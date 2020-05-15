@@ -299,3 +299,33 @@ pre {
 .table td, .table thead th {
      vertical-align: middle;
 }
+
+.description-container {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 30px;
+}
+
+.description-table {
+    margin-top: 15px;
+}
+
+.description-title {
+    margin: 30px 0;
+}
+
+.description-section-title {
+    font-size: 1.6rem;
+    font-weight: 300;
+    line-height: 1.2;
+}
+
+.description-image {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    width: 100%;
+}
+
+.description-paragraph {
+    line-height: 1.5;
+}
