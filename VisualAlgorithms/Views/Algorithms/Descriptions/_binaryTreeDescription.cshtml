@@ -30,14 +30,14 @@
         <div class="col-8">
             <p class="description-paragraph">
                 <b>Корневой узел</b> — это узел, находящийся на самом верхнем уровне и не являющийся чьим-либо потомком (узел 8).<br />
-                <b>Лист</b> — это узел, не имеющий дочерних элементов (узлы 1, 4, 7, 13).<br />
-                <b>Внутренний узел</b> — это любой узел дерева, имеющий потомков, то есть, не являющийся листовым узлом (узлы 3, 6, 10, 14).<br />
+                <b>Лист</b> — это узел, не имеющий дочерних элементов (узлы 1, 4, 10, 13).<br />
+                <b>Внутренний узел</b> — это любой узел дерева, имеющий потомков, то есть, не являющийся листовым узлом (узлы 3, 5, 9, 12).<br />
                 <b>Высота узла</b> — это длина наибольшего пути от него до дочернего узла, являющегося листом.<br />
                 <b>Высота дерева</b> — это длина наибольшего пути от корня к листу (высота дерева на примере равна 3).<br />
             </p>
         </div>
         <div class="col-4">
-            <img class="description-image" src="images/descriptions/binary-tree/example.png" />
+            <img class="description-image" src="images/descriptions/@Model.Tag/example.png" />
             <h6 class="text-center">Простой пример бинарного дерева</h6>
         </div>
     </div>
@@ -77,7 +77,7 @@
                     </li>
                 </ul>
                 <div class="description-image-container">
-                    <img class="description-image" src="images/descriptions/binary-tree/insert.gif" />
+                    <img class="description-image" src="images/descriptions/@Model.Tag/insert.gif" />
                     <h6 class="text-center">Вставка узла 42</h6>
                 </div>
             </p>
@@ -103,7 +103,7 @@
                     </li>
                 </ul>
                 <div class="description-image-container">
-                    <img class="description-image" src="images/descriptions/binary-tree/find.gif" />
+                    <img class="description-image" src="images/descriptions/@Model.Tag/find.gif" />
                     <h6 class="text-center">Поиск узла 14</h6>
                 </div>
             </p>
@@ -159,7 +159,7 @@
                     </li>
                 </ul>
                 <div class="description-image-container">
-                    <img class="description-image" src="images/descriptions/binary-tree/remove.gif" />
+                    <img class="description-image" src="images/descriptions/@Model.Tag/remove.gif" />
                     <h6 class="text-center">Удаление узла 18</h6>
                 </div>
             </p>
@@ -169,25 +169,34 @@
         </div>
     </div>
     <div>
-        <h3 class="description-section-title">Сбалансированные и несбалансированные бинарные деревья</h3>
+        <h3 class="description-section-title">Сбалансированные и несбалансированные деревья</h3>
         <hr />
         <div class="description-container">
             <div class="col-8">
                 <p class="description-paragraph">
-                    <b>Бинарное дерево поиска</b> — это двоичное дерево, для которого выполняются следующие дополнительные условия (свойства дерева поиска):
-
-                    <ul>
-                        <li>Каждый узел имеет не более двух потомков.</li>
-                        <li>У всех узлов левого поддерева произвольного узла X значения ключей данных меньше, чем значение ключа данных самого узла X.</li>
-                        <li>У всех узлов правого поддерева произвольного узла X значения ключей данных больше либо равны, чем значение ключа данных самого узла X.</li>
-                    </ul>
+                    <b>Сбалансированное дерево</b> — это такое дерево, для каждого узла которого количество узлов в его левом и правом поддеревьях
+                    различается не более, чем на 1 (рис. 1).
                 </p>
                 <p class="description-paragraph">
-                    Основным преимуществом бинарного дерева поиска перед другими структурами данных является возможная высокая эффективность реализации основанных на нём алгоритмов поиска и сортировки.
+                    Само по себе бинарное дерево поиска не является сбалансированным деревом, и в худшем случае вырождается в список (рис. 2).
+                    При этом теряется производительность, поэтому для наилучшего быстродействия желательно,чтобы глубина и левого, и правого поддеревьев
+                    в каждом узле была примерно одинакова. Из-за этого ограничения на практике чаще всего используются сбалансированные деревья.
+                </p>
+                <p class="description-paragraph">
+                    Однако обычные бинарные деревья также могут оказаться полезны. Как показывает практика, они ничем не уступают сбалансированным
+                    деревьям при работе со случайным неупорядоченным набором данных. В совокупности с их довольно простой реализацией, это позволяет
+                    сделать выбор в пользу обычных бинарных деревьев (именно на наборе случайных данных).
                 </p>
             </div>
             <div class="col-4">
-                <img class="description-image" src="@Model.ImageUrl" />
+                <div class="description-image-container">
+                    <img class="description-image" src="images/descriptions/@Model.Tag/balanced.png" />
+                    <h6 class="text-center">Сбалансированное дерево</h6>
+                </div>
+                <div class="description-image-container">
+                    <img class="description-image" src="images/descriptions/@Model.Tag/unbalanced.png" />
+                    <h6 class="text-center">Несбалансированное дерево</h6>
+                </div>
             </div>
         </div>
     </div>
