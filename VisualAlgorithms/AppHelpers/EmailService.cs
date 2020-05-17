@@ -18,7 +18,7 @@ namespace VisualAlgorithms.AppHelpers
         {
             var emailMessage = new MimeMessage();
 
-            emailMessage.From.Add(new MailboxAddress("Администрация Visual Algorithms", _configuration["Email:Mail"]));
+            emailMessage.From.Add(new MailboxAddress("Visual Algorithms", _configuration["Email:Mail"]));
             emailMessage.To.Add(new MailboxAddress("", email));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)

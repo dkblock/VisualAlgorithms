@@ -1,25 +1,39 @@
-﻿@model IEnumerable<Algorithm>
+﻿@model List<Algorithm>
 @{
     ViewData["Title"] = "Алгоритмы";
 }
 
-<div class="main-form-title text-center">Алгоритмы</div>
-<div class="card-deck">
-    @foreach (var algorithm in Model)
+<div class="main-form-title text-center description-title">Алгоритмы</div>
+@for (var i = 0; i < Model.Count; i += 3)
+{
+    if (i < Model.Count)
     {
-        <div class="card">
-            <img class="card-img-top" src="images/@algorithm.ImageUrl" alt="Algorithm image">
-            <div class="card-body card-body-bordered">
-                <h5 class="card-title">@algorithm.Name</h5>
-                <div class="button-box">
-                    <a class="button col-5" asp-controller="Algorithms" asp-action="Info" asp-route-id="@algorithm.Tag">
-                        Информация
-                    </a>
-                    <a class="button button-primary col-5" asp-controller="Constructor" asp-action="Module" asp-route-id="@algorithm.Tag">
-                        Конструктор
-                    </a>
-                </div>
-            </div>
+        <div class="card-deck card-deck-row">
+            @for (var j = i; j < i + 3; j++)
+            {
+                if (j < Model.Count)
+                {
+                    var algorithm = Model[j];
+                    <div class="card">
+                        <img class="card-img-top" src="@algorithm.ImageUrl" alt="Algorithm image">
+                        <div class="card-body card-body-bordered">
+                            <h5 class="card-title">@algorithm.Name</h5>
+                            <div class="button-box">
+                                <a class="button col-5" asp-controller="Algorithms" asp-action="Info" asp-route-id="@algorithm.Tag">
+                                    Информация
+                                </a>
+                                <a class="button button-primary col-5" asp-controller="Constructor" asp-action="Module" asp-route-id="@algorithm.Tag">
+                                    Конструктор
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="card card-hidden"></div>
+                }
+            }
         </div>
     }
-</div>
+}

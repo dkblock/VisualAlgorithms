@@ -4,6 +4,7 @@
     ViewData["Title"] = Model.Name;
 }
 
-<div class="main-form-title text-center description-title">@Model.Name</div>
+<div class="description-title"></div>
+@*<div class="main-form-title text-center description-title">@Model.Name</div>*@
 @{ await Html.RenderPartialAsync($"Descriptions/_{Model.Tag}Description", Model); }
 <a asp-controller="Algorithms" asp-action="Index" class="main-link"><< Назад</a>

@@ -20,16 +20,6 @@
             <td>@Model.SortingWorstTime</td>
         </tr>
     }
-    @if (Model.IndexingAverageTime != null)
-    {
-    <tr>
-        <td>
-            <label asp-for="IndexingAverageTime"></label>
-        </td>
-        <td>@Model.IndexingAverageTime</td>
-        <td>@Model.IndexingWorstTime</td>
-    </tr>
-    }
     @if (Model.SearchingAverageTime != null)
     {
     <tr>

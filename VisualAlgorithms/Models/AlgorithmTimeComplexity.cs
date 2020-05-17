@@ -6,18 +6,15 @@ namespace VisualAlgorithms.Models
     {
         [Key]
         public int Id { get; set; }
+        
+        [Display(Name = "Сортировка")]
+        public string SortingBestTime { get; set; }
 
         [Display(Name = "Сортировка")]
         public string SortingAverageTime { get; set; }
 
         [Display(Name = "Сортировка")]
         public string SortingWorstTime { get; set; }
-
-        [Display(Name = "Индексация")]
-        public string IndexingAverageTime { get; set; }
-
-        [Display(Name = "Индексация")]
-        public string IndexingWorstTime { get; set; }
 
         [Display(Name = "Поиск")]
         public string SearchingAverageTime { get; set; }
