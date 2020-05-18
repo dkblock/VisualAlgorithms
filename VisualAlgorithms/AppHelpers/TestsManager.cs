@@ -104,6 +104,21 @@ namespace VisualAlgorithms.AppHelpers
             return true;
         }
 
+        public async Task CheckLastQuestion(int testId)
+        {
+            var testQuestions = await _db.TestQuestions
+                .Where(tq => tq.TestId == testId)
+                .ToListAsync();
+
+            if (testQuestions.Any(tq => tq.IsLastQuestion))
+                return;
+
+            var lastQuestion = testQuestions.Last();
+            lastQuestion.IsLastQuestion = true;
+            _db.Entry(lastQuestion).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+        }
+
         public void MixTestAnswers(List<TestAnswer> testAnswers)
         {
             var rnd = new Random();

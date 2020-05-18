@@ -7,7 +7,7 @@ namespace VisualAlgorithms.Models
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Введите ответ!")]
+        [Required(ErrorMessage = "Необходимо дать ответ!")]
         public string Answer { get; set; }
 
         public int TestQuestionId { get; set; }

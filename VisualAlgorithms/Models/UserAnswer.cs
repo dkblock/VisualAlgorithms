@@ -5,7 +5,7 @@ namespace VisualAlgorithms.Models
     public class UserAnswer
     {
         [Display(Name = "Ответ")]
-        [Required(ErrorMessage = "Введите ответ!")]
+        [Required(ErrorMessage = "Необходимо дать ответ!")]
         public string Answer { get; set; }
 
         public bool IsCorrect { get; set; }

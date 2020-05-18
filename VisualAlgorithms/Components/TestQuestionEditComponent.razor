@@ -220,7 +220,7 @@
 
     private bool IsImage(IFileListEntry file)
     {
-        var ext = Path.GetExtension(file.Name);
+        var ext = Path.GetExtension(file.Name).ToLower();
         return string.Compare(ext, ".png", StringComparison.Ordinal) == 0 ||
                string.Compare(ext, ".jpeg", StringComparison.Ordinal) == 0 ||
                string.Compare(ext, ".jpg", StringComparison.Ordinal) == 0;

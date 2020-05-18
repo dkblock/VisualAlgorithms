@@ -14,7 +14,10 @@
                 @{ await Html.RenderPartialAsync("_PassingTestQuestion", Model);}
             </div>
             <div class="col-6 question-img-container">
-                <img class="test-img-bordered" src="images/test-questions/@Model.TestQuestion.Image" alt="img" />
+                <img id="image" class="test-img-bordered" src="images/test-questions/@Model.TestQuestion.Image" alt="img" />
+                <div id="fullImage" class="test-img-full-container">
+                    <img class="test-img-full" src="images/test-questions/@Model.TestQuestion.Image" alt="img" />
+                </div>
             </div>
         </div>
     </div>
@@ -27,4 +30,16 @@ else
             @{ await Html.RenderPartialAsync("_PassingTestQuestion", Model);}
         </div>
     </div>
+}
+
+@section scripts {
+    <script>
+        $("#image").click(function() {
+            $("#fullImage").show();
+        });
+
+        $("#fullImage").click(function() {
+            $("#fullImage").hide();
+        });
+    </script>
 }

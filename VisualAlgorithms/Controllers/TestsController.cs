@@ -167,7 +167,10 @@ namespace VisualAlgorithms.Controllers
         public async Task<IActionResult> Passing(int testId, int? questionId)
         {
             if (questionId == null)
+            {
+                await _testsManager.CheckLastQuestion(testId);
                 await _testsManager.CheckUserTest(testId, GetUserId());
+            }
 
             if (await _testsManager.CheckUserAnswer(testId, questionId, GetUserId()))
                 return RedirectToAction("Index");
