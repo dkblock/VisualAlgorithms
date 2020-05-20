@@ -7,6 +7,8 @@
 <div class="list-group">
     @foreach (var algorithm in Model)
     {
-        <a class="list-group-item list-group-item-action" asp-controller="Constructor" asp-action="Module" asp-route-id="@algorithm.Id">@algorithm.Name</a>
+        <a class="list-group-item list-group-item-action" asp-controller="Constructor" asp-action="Module" asp-route-id="@algorithm.Tag">
+            @algorithm.Name
+        </a>
     }
 </div>

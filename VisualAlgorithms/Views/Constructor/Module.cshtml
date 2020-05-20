@@ -4,8 +4,4 @@
     ViewData["Title"] = $"Конструктор - {Model.Name}";
 }
 
-<h1>@Model.Name</h1>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@{ await Html.RenderPartialAsync($"Modules/_{Model.Tag}Module", Model); }
