@@ -36,7 +36,7 @@ function swap(element1, element2,element3) {
   });
 }
 
-btnSort.onclick=async function bubbleSort() {
+btnSort.onclick=async function selectionSort() {
              
   let elements = document.querySelectorAll(".element");
   for (let i = 0; i < elements.length - 1; i++) {
