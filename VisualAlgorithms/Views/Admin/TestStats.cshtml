@@ -1,0 +1,40 @@
+﻿@model VisualAlgorithms.ViewModels.TestStatsViewModel
+@{
+    ViewData["Title"] = Model.Test.Name;
+}
+
+<div class="description-title"></div>
+<div class="button-box">
+    <span class="main-form-title">@Model.Test.Name</span>
+    <span class="main-form col-4">
+        Тест был пройден @Model.TotalPassings раз(-а)<br/>
+        Средний результат: @(Model.AverageResult)%
+    </span>
+</div>
+
+@for (var i = 0; i < Model.TestQuestions.Count; i++)
+{
+    var testQuestion = Model.TestQuestions[i];
+
+    <div class="question-container main-form description-title">
+        <div class="@(testQuestion.TestQuestion.Image == null ? "col-12" : "col-6")">
+            <div class="form-group">
+                <span class="main-form-label">Вопрос @(i + 1)</span><br/>
+                <span>@testQuestion.TestQuestion.Question</span>
+            </div>
+            <hr/>
+            <div>
+                <span class="main-form-label">Правильных ответов: @testQuestion.CorrectAnswers</span><br/>
+                <span class="main-form-label">Неправильных ответов: @testQuestion.IncorrectAnswers</span><br/>
+                <span class="main-form-label">Средний результат: @(testQuestion.AverageResult)%</span>
+            </div>
+        </div>
+        @if (testQuestion.TestQuestion.Image != null)
+        {
+            <div class="col-6 question-img-container">
+                <img class="test-img-bordered" src="images/test-questions/@testQuestion.TestQuestion.Image" alt="img"/>
+            </div>
+        }
+    </div>
+}
+<a class="main-link" asp-controller="Admin" asp-action="Tests"><< Назад</a>

@@ -105,7 +105,16 @@
                         <input asp-for="@Model.OrderBy" type="hidden"/>
                         <input asp-for="@Model.DeletedTestId" type="hidden" value="@item.TestId"/>
                         <input asp-for="@Model.DeletedUserId" type="hidden" value="@item.UserId"/>
-                        <input type="submit" class="button button-danger main-form-btn" value="Удалить"/>
+                        <div class="button-box-centered">
+                            <a asp-controller="Admin" asp-action="UserTestStats" asp-route-testId="@item.TestId" asp-route-userId="@item.UserId">
+                                <div class="icon-button">
+                                    <img class="icon-primary" src="images/icons/list.svg"/>
+                                </div>
+                            </a>
+                            <button class="icon-button" type="submit">
+                                <img class="icon-primary" src="images/icons/delete.svg"/>
+                            </button>
+                        </div>
                     </form>
                 </td>
             </tr>

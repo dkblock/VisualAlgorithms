@@ -14,7 +14,7 @@
                 @{ await Html.RenderPartialAsync("_PassingTestQuestion", Model);}
             </div>
             <div class="col-6 question-img-container">
-                <img id="image" class="test-img-bordered" src="images/test-questions/@Model.TestQuestion.Image" alt="img" />
+                <img id="image" class="test-img-bordered cursor-pointer" src="images/test-questions/@Model.TestQuestion.Image" alt="img" />
                 <div id="fullImage" class="test-img-full-container">
                     <img class="test-img-full" src="images/test-questions/@Model.TestQuestion.Image" alt="img" />
                 </div>

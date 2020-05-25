@@ -1,0 +1,70 @@
+﻿@model VisualAlgorithms.ViewModels.UserTestStatsViewModel
+@{
+    ViewData["Title"] = Model.UserTest.Test.Name;
+}
+
+<div class="description-title"></div>
+<div class="button-box">
+    <span class="main-form-title">@Model.UserTest.Test.Name</span>
+    <div class="main-form col-4">
+        <div class="form-group">
+            <span>
+                @Model.User.LastName @Model.User.FirstName<br />
+                @Model.User.Group.Name<br />
+                Правильных ответов: @Model.UserTest.CorrectAnswers из @Model.UserTest.TotalQuestions<br />
+                Результат: @(Model.UserTest.Result)%
+            </span>
+        </div>
+        <hr/>
+        <form method="get">
+            <input name="testId" value="@Model.UserTest.TestId" type="hidden"/>
+            <input name="userId" value="@Model.User.Id" type="hidden"/>
+            <div>
+                <select class="custom-select" name="answersType" onchange="this.form.submit()">
+                    @for (var i = 0; i < Model.AnswerTypes.Count; i++)
+                    {
+                        if (Model.AnswersType == i)
+                        {
+                            <option value="@i" selected>@Model.AnswerTypes[i]</option>
+                        }
+                        else
+                        {
+                            <option value="@i">@Model.AnswerTypes[i]</option>
+                        }
+                    }
+                </select>
+            </div>
+        </form>
+    </div>
+</div>
+
+@foreach (var answer in Model.UserAnswers)
+{
+    var answerType = answer.IsCorrect ? "Верно" : "Неверно";
+    var color = answer.IsCorrect ? "text-success" : "text-danger";
+    var answer1 = answer;
+    var correctAnswer = answer.TestQuestion.TestAnswers.Single(ta => ta.Id == answer1.TestQuestion.CorrectAnswerId).Answer;
+
+    <div class="question-container main-form description-title">
+        <div class="@(answer.TestQuestion.Image == null ? "col-12" : "col-6")">
+            <div class="form-group">
+                <span class="main-form-label">Вопрос @(Model.AllUserAnswers.IndexOf(answer) + 1)</span><br />
+                <span>@answer.TestQuestion.Question</span>
+            </div>
+            <hr />
+            <div>
+                <span class="main-form-label">Ответ: @answer.Answer</span><br />
+                <span class="main-form-label">Правильный ответ: @correctAnswer</span><br />
+                <span class="main-form-label @color">@answerType</span>
+            </div>
+        </div>
+        @if (answer.TestQuestion.Image != null)
+        {
+            <div class="col-6 question-img-container">
+                <img class="test-img-bordered" src="images/test-questions/@answer.TestQuestion.Image" alt="img" />
+            </div>
+        }
+    </div>
+}
+<a class="main-link" asp-controller="Admin" asp-action="Stats"><< Назад</a>
+

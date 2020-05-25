@@ -55,6 +55,9 @@
     min-width: 75%;
     margin: auto;
     margin-bottom: 5px;
+}
+
+.cursor-pointer {
     cursor: pointer;
 }
 
@@ -132,9 +135,17 @@ pre {
     flex-direction: column;
 }
 
-.button-box-centered { justify-content: space-evenly; }
+.button-box-centered {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
 
-.button-box-started { justify-content: flex-start }
+.button-box-started {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start
+}
 
 .button {
     border: 1px solid #ced4da;
@@ -339,3 +350,32 @@ pre {
 }
 
 .description-paragraph { line-height: 1.5; }
+
+.icon-primary {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.icon-button {
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    background-color: transparent;
+    border-radius: 50%;
+    border-color: transparent;
+    cursor: pointer;
+    position: relative;
+}
+
+.icon-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.icon-button:active {
+    background-color: rgba(0, 0, 0, 0.2);
+}

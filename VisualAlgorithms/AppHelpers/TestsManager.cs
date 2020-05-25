@@ -26,6 +26,12 @@ namespace VisualAlgorithms.AppHelpers
                 ? correctAnswer.Answer
                 : correctAnswer.Id.ToString());
 
+            if (testQuestion.TestQuestionType == TestQuestionType.SelectAnswer)
+            {
+                var selectedAnswer = await _db.TestAnswers.FindAsync(int.Parse(userAnswer.Answer));
+                userAnswer.Answer = selectedAnswer.Answer;
+            }
+
             await _db.UserAnswers.AddAsync(userAnswer);
             await _db.SaveChangesAsync();
         }

@@ -13,7 +13,7 @@
         <th>Количество вопросов</th>
         <th>
             <a asp-controller="Tests" asp-action="Create">
-                <div class="button button-success main-form-btn">
+                <div class="button button-success table-button">
                     Добавить тест
                 </div>
             </a>
@@ -28,9 +28,18 @@
             <td>@test.Algorithm.Name</td>
             <td>@test.TestQuestions.Count</td>
             <td>
-                <a asp-controller="Tests" asp-action="Edit" asp-route-id="@test.Id">
-                    <div class="button button-primary table-button">Редактировать</div>
-                </a>
+                <div class="button-box-centered">
+                    <a asp-controller="Tests" asp-action="Edit" asp-route-id="@test.Id">
+                        <div class="icon-button">
+                            <img class="icon-primary" src="images/icons/edit.svg" />
+                        </div>
+                    </a>
+                    <a asp-controller="Admin" asp-action="TestStats" asp-route-id="@test.Id">
+                        <div class="icon-button">
+                            <img class="icon-primary" src="images/icons/stats.svg" />
+                        </div>
+                    </a>
+                </div>
             </td>
         </tr>
     }
