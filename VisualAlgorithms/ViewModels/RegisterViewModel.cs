@@ -34,7 +34,7 @@ namespace VisualAlgorithms.ViewModels
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Введите пароль!")]
-        [Compare("Password", ErrorMessage = "Пароли не совпадают")]
+        [Compare("Password", ErrorMessage = "Пароли не совпадают!")]
         [DataType(DataType.Password)]
         [Display(Name = "Подтвердите пароль")]
         public string PasswordConfirm { get; set; }

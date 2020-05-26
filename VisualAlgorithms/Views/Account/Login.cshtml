@@ -7,13 +7,18 @@
     <div class="main-form-title text-center">Вход</div>
     <form class="main-form" method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">
         <div class="main-form-label text-danger" asp-validation-summary="ModelOnly"></div>
-        <div class="form-group">
+        <div>
             <label asp-for="Username" class="main-form-label"></label><br/>
             <input asp-for="Username" class="form-control"/>
             <span class="main-form-label text-danger" asp-validation-for="Username"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Password" class="main-form-label"></label><br/>
+            <div class="button-box">
+                <label asp-for="Password" class="main-form-label"></label>
+                <label asp-for="Password" class="main-form-label">
+                    <a asp-controller="Account" asp-action="ForgotPassword">Забыли пароль?</a>
+                </label>
+            </div>
             <input asp-for="Password" class="form-control"/>
             <span class="main-form-label text-danger" asp-validation-for="Password"></span>
         </div>

@@ -66,11 +66,7 @@ namespace VisualAlgorithms.Controllers
                 if (result.Succeeded)
                 {
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.Action(
-                        "ConfirmEmail",
-                        "Account",
-                        new { userId = user.Id, code = code },
-                        HttpContext.Request.Scheme);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, HttpContext.Request.Scheme);
 
                     await _userManager.AddToRoleAsync(user, "user");
                     await _signInManager.SignInAsync(user, false);
@@ -86,6 +82,12 @@ namespace VisualAlgorithms.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
             }
 
+            var groups = await _db.Groups
+                .Where(g => g.IsAvailableForRegister)
+                .OrderBy(g => g.Name)
+                .ToListAsync();
+
+            model.Groups = groups;
             return View(model);
         }
 
@@ -119,6 +121,62 @@ namespace VisualAlgorithms.Controllers
                 return RedirectToAction("Index", "Home");
             
             return NotFound();
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null || !await _userManager.IsEmailConfirmedAsync(user))
+                return View("ForgotPasswordConfirm", model);
+
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, HttpContext.Request.Scheme);
+
+            await _emailService.SendEmailAsync(model.Email, "Сброс пароля",
+                $"Чтобы сбросить пароль, <a href='{callbackUrl}'>перейдите по этой ссылке</a>.");
+
+            return View("ForgotPasswordConfirm", model);
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string code = null)
+        {
+            return code == null ? View("Login") : View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+                return View("ResetPasswordConfirm");
+
+            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+
+            if (result.Succeeded)
+                return View("ResetPasswordConfirm");
+
+            foreach (var error in result.Errors)
+                ModelState.AddModelError(string.Empty, error.Description);
+
+            return View(model);
         }
 
         [HttpGet]
