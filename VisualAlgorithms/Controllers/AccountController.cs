@@ -126,7 +126,8 @@ namespace VisualAlgorithms.Controllers
         [HttpGet]
         public IActionResult ForgotPassword()
         {
-            return View();
+            var model = new ForgotPasswordViewModel();
+            return View(model);
         }
 
         [HttpPost]

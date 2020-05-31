@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using VisualAlgorithms.ViewModels;
 
 namespace VisualAlgorithms.Models
 {
