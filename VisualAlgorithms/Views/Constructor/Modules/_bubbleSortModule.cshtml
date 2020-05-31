@@ -2,9 +2,20 @@
 
 <link rel="stylesheet" href="~/constructor/@Model.Tag/@(Model.Tag).css" />
 <div class="app">
-    <h1 class="title">Bubble Sort</h1>
+    <h1 class="title">Сортировка пузырьком</h1>
     <div class="blockSort"></div>
     <button class="btnSort" id="btnSort">Отсортировать</button>
+    <div class="h2description">
+        Краткое описание сортировки
+      </div>
+      <div class="description">
+        Обходим массив от начала до конца, попутно меняя местами неотсортированные соседние элементы (<div class="circle" style="background-color: #FF0000;"></div> - красный).
+         В результате первого прохода на последнее место «всплывёт» максимальный элемент (<div class="circle" style="background-color: #00DD21;"></div> - зеленый).
+          Теперь снова обходим неотсортированную часть массива (от первого элемента до предпоследнего) и меняем по пути неотсортированных соседей.
+           Второй по величине элемент окажется на предпоследнем месте (<div class="circle" style="background-color: #00DD21;"></div> - зеленый). Продолжая дальше,
+            будем обходить всё уменьшающуюся неотсортированную часть массива,
+            передвигая найденные максимумы в конец.
+      </div>
 </div>
 <script src="~/constructor/@Model.Tag/@(Model.Tag).js"></script>
 
