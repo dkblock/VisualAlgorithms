@@ -1,9 +1,18 @@
 ﻿@model VisualAlgorithms.Models.Algorithm
 
 <link rel="stylesheet" href="~/constructor/@Model.Tag/@(Model.Tag).css" />
-<div class="app">
-    <h1 class="title">Insertion Sort</h1>
+<div>
+    <h1 class="title main-form-title">Сортировка вставками</h1>
     <div class="blockSort"></div>
-    <button id="btnSort" class="btnSort">Отсортировать</button>
+    <button id="btnSort" class="btnSort button button-primary">Отсортировать</button>
+    <div class="h2description">
+        Краткое описание сортировки
+    </div>
+    <div class="description">
+        Массив разбивается на «отсортированный» подмассив (<div class="circle" style="background-color:  #00DD21;"></div> - зеленый) и «несортированный» подмассив (<div class="circle" style="background-color:  #0094FF;"></div> - синий). В начале отсортированный подмассив содержит только первый элемент нашего исходного массива.
+Каждый элемент (<div class="circle" style="background-color: #FF0000;"></div> - красный) в несортированном массиве оценивается так, что мы можем вставить его на свое место в отсортированном подмассиве.
+Вставка выполняется путем перемещения каждого элемента который больше (<div class="circle" style="background-color:  #FFD800;"></div> - желтый), чем новый элемент, на одну позицию вправо.
+Это продолжается, пока весь наш массив не будет отсортирован.
+    </div>
 </div>
 <script src="~/constructor/@Model.Tag/@(Model.Tag).js"></script>
