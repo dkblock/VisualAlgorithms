@@ -14,7 +14,7 @@ function generateNumbers() {
   }
 }
 
-function swap(element1, element2,element3) {
+function swap(element1, element2) {
   return new Promise(resolve => {
     const style1 = window.getComputedStyle(element1);
     const style2 = window.getComputedStyle(element2);
@@ -25,11 +25,14 @@ function swap(element1, element2,element3) {
     
     element1.style.transform = transform2;
     element2.style.transform = transform1;
-
+     
     window.requestAnimationFrame(function() {
       setTimeout(() => {
-        blockSort.insertBefore(element2, element1);
-        blockSort.insertBefore(element1, element3);
+        var clonedElement1 = element1.cloneNode(true);
+        var clonedElement2 = element2.cloneNode(true);
+
+        element2.parentNode.replaceChild(clonedElement1, element2);
+        element1.parentNode.replaceChild(clonedElement2, element1);
         resolve();
       }, 2000);
     });
@@ -37,38 +40,39 @@ function swap(element1, element2,element3) {
 }
 
 btnSort.onclick=async function selectionSort() {
-             
+  btnSort.style.visibility="hidden";
   let elements = document.querySelectorAll(".element");
   for (let i = 0; i < elements.length - 1; i++) {
     let min = i;
-    elements[i].style.backgroundColor = "red";
+    elements[i].style.backgroundColor = "#FF0000";
     for (let j = i+1; j < elements.length; j++) {
-      elements[j].style.backgroundColor = "yellow";
-      // elements[j + 1].style.backgroundColor = "red";
+      elements[j].style.backgroundColor = "#FFD800";
       
       await new Promise(resolve =>
         setTimeout(() => {
           resolve();
-        }, 2000)
+        }, 1000)
       );
 
       const value1 = Number(elements[j].innerHTML);
       const value2 = Number(elements[min].innerHTML);
 
       if (value1 < value2) { 
-        elements[min].style.backgroundColor = "deepskyblue";  
-        elements[j].style.backgroundColor = "red";   
+        elements[min].style.backgroundColor = "#0094FF";  
+        elements[j].style.backgroundColor = "#FF0000";   
         min=j;       
-      } else{ elements[j].style.backgroundColor = "deepskyblue";}
+      } else{ elements[j].style.backgroundColor = "#0094FF";}
       
     }
-    elements[i].style.backgroundColor = "red";  
-    await swap(elements[i], elements[min], elements[min+1]);
-    elements[i].style.backgroundColor = "deepskyblue"; 
+    elements[i].style.backgroundColor = "#FF0000"; 
+    if(i!=min){
+      await swap(elements[i], elements[min]);
+    }
+    elements[i].style.backgroundColor = "#0094FF"; 
     elements = document.querySelectorAll(".element");
-    elements[i].style.backgroundColor = "lightgreen";
+    elements[i].style.backgroundColor = "#00DD21";
   }
-  elements[elements.length-1].style.backgroundColor = "lightgreen";
+  elements[elements.length-1].style.backgroundColor = "#00DD21";
 }
 
 generateNumbers();
