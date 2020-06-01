@@ -1,5 +1,5 @@
 const blockSort = document.querySelector(".blockSort");
-
+let places=[];
 function generateNumbers() {
   
   for (let i = 0; i < 10; i ++) {
@@ -8,7 +8,7 @@ function generateNumbers() {
     const blockNumber = document.createElement("div");
     blockNumber.classList.add("element");
     blockNumber.style.transform = `translateX(${(i-4.5) * 75}px)`;
-
+    places[i]=(i-4.5) * 75;
     blockNumber.innerHTML = value;
     blockSort.appendChild(blockNumber);
   }
@@ -44,7 +44,14 @@ function swap(element1, element2) {
 }
 
 let arr = document.querySelectorAll(".element");
-btnSort.onclick=function(){btnSort.style.visibility="hidden"; QuickSort(arr, 0, arr.length-1);}
+btnSort.onclick=async function(){
+  btnSort.style.visibility="hidden";
+  await QuickSort(arr, 0, arr.length-1);
+  let labels = document.querySelectorAll('.label');
+  for(i=0; i<labels.length; i++) {
+    labels[i].style.visibility="hidden";
+  }
+}
 
 async function QuickSort(elements, begin, end) {
   elements = document.querySelectorAll(".element");
@@ -57,21 +64,35 @@ async function QuickSort(elements, begin, end) {
 
   elements[Math.floor((begin + end) / 2)].style.backgroundColor = "yellow";
 
+  let labels = document.querySelectorAll('.label');
+  for(i=0; i<labels.length; i++) {
+    labels[i].parentNode.removeChild(labels[i]);
+  }
   let left = begin;
+      const leftlabel = document.createElement("div");
+      leftlabel.classList.add("label");
+      leftlabel.style.transform = `translate(${places[left]}px, 100px)`;
+      leftlabel.innerHTML = "Left↑";
+      blockSort.appendChild(leftlabel);
+
   let right = end;
+      const rightlabel = document.createElement("div");
+      rightlabel.classList.add("label");
+      rightlabel.style.transform = `translate(${places[right]}px, 75px)`;
+      rightlabel.innerHTML = "Right↑";
+      blockSort.appendChild(rightlabel);
+
 
   while (left <= right){
 
-      while (Number(elements[left].innerHTML) < pivot){  
-          let color=elements[right].style.backgroundColor; 
-          elements[left].style.backgroundColor="#008200";        
+      while (Number(elements[left].innerHTML) < pivot){       
           await new Promise(resolve =>
             setTimeout(() => {
               resolve();
-            }, 2000)
+            }, 1000)
           );
-          elements[left].style.backgroundColor=color;  
           left++;
+          leftlabel.style.transform = `translate(${places[left]}px, 100px)`;
       }
 
       await new Promise(resolve =>
@@ -80,33 +101,32 @@ async function QuickSort(elements, begin, end) {
         }, 2000)
       );
 
-      elements[left].style.backgroundColor="#FF0000";
-
-
-      await new Promise(resolve =>
-        setTimeout(() => {
-          resolve();
-        }, 3000)
-      ); 
+      if(left<=right){
+        elements[left].style.backgroundColor="#FF0000";
+      }
 
       while (Number(elements[right].innerHTML) > pivot){  
-        let color=elements[right].style.backgroundColor;          
-        elements[right].style.backgroundColor="BA66FF"; 
+        
         await new Promise(resolve =>
           setTimeout(() => {
             resolve();
-          }, 2000)
+          }, 1000)
         );  
-        elements[right].style.backgroundColor=color;  
         right--; 
+        rightlabel.style.transform = `translate(${places[right]}px, 75px)`;
       }
-      elements[right].style.backgroundColor="#FF0000"; 
+      
+      if(left<right){
+        elements[right].style.backgroundColor="#FF0000";
+      }
 
       await new Promise(resolve =>
         setTimeout(() => {
           resolve();
         }, 2000)
       ); 
+
+      
       let flag=false;
 
       if (left <= right){   
@@ -118,6 +138,8 @@ async function QuickSort(elements, begin, end) {
           flag=true;
           left++;
           right--;
+          leftlabel.style.transform = `translate(${places[left]}px, 100px)`;
+          rightlabel.style.transform = `translate(${places[right]}px, 75px)`;
           
       }
 
@@ -158,8 +180,6 @@ async function QuickSort(elements, begin, end) {
 
   elements[right+1].style.backgroundColor="#00DD21";
   elements[end].style.backgroundColor="#00DD21";
-  
-  
 }
 
 

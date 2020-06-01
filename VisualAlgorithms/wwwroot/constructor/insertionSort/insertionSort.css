@@ -21,7 +21,7 @@
     vertical-align: middle;
     transition: 1s all ease;
     border-radius: 50%;
-    
+    user-select: none;
 }
 
 .btnSort {
