@@ -1,9 +1,19 @@
 ﻿@model VisualAlgorithms.Models.Algorithm
 
 <link rel="stylesheet" href="~/constructor/@Model.Tag/@(Model.Tag).css" />
-<div class="app">
-        <h1 class="title">Selection Sort</h1>
+<div >
+        <h1 class="title main-form-title">Сортировка выбором</h1>
         <div class="blockSort"></div>
-        <button id="btnSort" class="btnSort">Отсортировать</button>
+        <button id="btnSort" class="btnSort button button-primary">Отсортировать</button>
+
+        <div class="h2description">
+        Краткое описание сортировки
+        </div>
+        <div class="description">
+        Берем первый элемент неотсортированного массива. Затем перебираем все элементы (<div class="circle" style="background-color:  #FFD800;"></div> - желтый)
+            находим минимальный элемент последовательности и запоминаем его номер (<div class="circle" style="background-color: #FF0000;"></div> - красный).
+            Если номер первого элемента (<div class="circle" style="background-color: #FF0000;"></div> - красный) неотсортированного массива и номер найденного элемента не совпадают, тогда два этих элемента обмениваются значениями,
+            увеличиваем i на 1 и продолжаем сортировку оставшейся части массива, а именно с элемента с номером 2 по N, так как элемент A[1] уже занимает свою позицию;
+        </div>
 </div>
 <script src="~/constructor/@Model.Tag/@(Model.Tag).js"></script>

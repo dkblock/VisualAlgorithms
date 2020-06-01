@@ -34,11 +34,13 @@ function swap(element1, element2) {
 }
 
 btnSort.onclick = async function bubbleSort() {
+  btnSort.style.visibility="hidden";
+  document.getElementById(btnSort)
   let elements = document.querySelectorAll(".element");
-  for (let i = 0; i < elements.length - 1; i += 1) {
-    for (let j = 0; j < elements.length - i - 1; j += 1) {
-      elements[j].style.backgroundColor = "red";
-      elements[j + 1].style.backgroundColor = "red";
+  for (let i = 0; i < elements.length - 1; i ++) {
+    for (let j = 0; j < elements.length - i - 1; j ++) {
+      elements[j].style.backgroundColor = "#FF0000";
+      elements[j + 1].style.backgroundColor = "#FF0000";
 
       await new Promise((resolve) =>
         setTimeout(() => {
@@ -54,13 +56,13 @@ btnSort.onclick = async function bubbleSort() {
         elements = document.querySelectorAll(".element");
       }
 
-      elements[j].style.backgroundColor = "deepskyblue";
-      elements[j + 1].style.backgroundColor = "deepskyblue";
+      elements[j].style.backgroundColor = "#0094FF";
+      elements[j + 1].style.backgroundColor = "#0094FF";
     }
 
-    elements[elements.length - i - 1].style.backgroundColor = "green";
+    elements[elements.length - i - 1].style.backgroundColor = "#00DD21";
   }
-  elements[0].style.backgroundColor = "green";
+  elements[0].style.backgroundColor = "#00DD21";
 };
 
 generateNumbers();

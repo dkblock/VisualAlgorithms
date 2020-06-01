@@ -1,4 +1,20 @@
 ﻿@model VisualAlgorithms.Models.Algorithm
 
 <link rel="stylesheet" href="~/constructor/@Model.Tag/@(Model.Tag).css" />
+<div >
+        <h1 class="title main-form-title">Быстрая сортировка</h1>
+        <div class="blockSort"></div>
+        <button id="btnSort" class="btnSort button button-primary">Отсортировать</button>
+
+        <div class="h2description">
+        Краткое описание сортировки
+        </div>
+        <div class="description">
+        Вводятся указатели first и last для обозначения начального и конечного элементов последовательности, а также опорный элемент (<div class="circle" style="background-color:  #FFD800;"></div> - желтый).
+        Сначала вычисляется значение опорного элемента (first+last)/2.
+        Указатель first смещается с шагом в 1 элемент (<div class="circle" style="background-color: #008200;"></div> - темно-зеленый) к концу массива до тех пор, пока элемент больше опорного. А указатель last (<div class="circle" style="background-color: BA66FF;"></div> - фиолетовый) смещается от конца массива к его началу, пока элемент меньше опорного;
+        каждые два найденных элемента меняются местами (<div class="circle" style="background-color: #FF0000;"></div> - красный).
+        Смещения выполняются до тех пор, пока first меньше last. Таким образом, получилось разбиение относительно опорного элемента. Если в какой-то из получившихся в результате разбиения массива частей находиться больше одного элемента, то следует произвести рекурсивное упорядочивание этой части, то есть выполнить над ней операцию разбиения, описанную ранее.
+        </div>
+</div>
 <script src="~/constructor/@Model.Tag/@(Model.Tag).js"></script>

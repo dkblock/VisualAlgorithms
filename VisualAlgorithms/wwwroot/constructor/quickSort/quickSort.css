@@ -10,6 +10,13 @@
     margin-top: 75px;
 }
 
+.label{
+  position: absolute;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+}
+
 .element {
     position: absolute;
     background-color: #0094FF;

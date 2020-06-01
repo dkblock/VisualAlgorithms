@@ -22,18 +22,9 @@ function swap(element1, element2) {
     let matrix2 = window.getComputedStyle(element2).transform;
     matrix2 = matrix2.split(/\(|,\s|\)/).slice(1,7);
 
-    // const style1 = window.getComputedStyle(element1);
-    // const style2 = window.getComputedStyle(element2);
-
-    // const transform1 = style1.getPropertyValue("transform");
-    // const transform2 = style2.getPropertyValue("transform");
-
     element1.style.transform = `translate(${matrix2[4]}px, 0px)`;
 
     element2.style.transform = `translate(${matrix1[4]}px, ${matrix2[5]}px)`;
-    
-    // element1.style.transform = transform2;
-    // element2.style.transform = transform1;
 
     window.requestAnimationFrame(function() {
       setTimeout(() => {
@@ -45,10 +36,10 @@ function swap(element1, element2) {
 }
 
 btnSort.onclick=async function insertionSort() {
- 
+  btnSort.style.visibility="hidden";
 
   let elements = document.querySelectorAll(".element");
-  elements[0].style.backgroundColor = "lightgreen";
+  elements[0].style.backgroundColor = "#00DD21";
 
   await new Promise(resolve =>
           setTimeout(() => {
@@ -60,14 +51,14 @@ btnSort.onclick=async function insertionSort() {
     let matrix = window.getComputedStyle(elements[i]).transform;
     matrix = matrix.split(/\(|,\s|\)/).slice(1,7);
 
-    elements[i].style.backgroundColor = "red";
+    elements[i].style.backgroundColor = "#FF0000";
     elements[i].style.transform = `translate(${matrix[4]}px,-100px)`;
-    elements[i-1].style.backgroundColor = "yellow";
+    elements[i-1].style.backgroundColor = "#FFD800";
     let count=i;
     let flag=false;
     for (let j = i; j > 0 && Number(elements[j-1].innerHTML)>Number(elements[j].innerHTML); j --) {
 
-      elements[j-1].style.backgroundColor = "yellow";
+      elements[j-1].style.backgroundColor = "#FFD800";
       await new Promise(resolve =>
         setTimeout(() => {
           resolve();
@@ -82,7 +73,7 @@ btnSort.onclick=async function insertionSort() {
         elements = document.querySelectorAll(".element");
       }
       count=j;
-      elements[j].style.backgroundColor = "lightgreen";
+      elements[j].style.backgroundColor = "#00DD21";
       flag=true;
     }
 
@@ -96,8 +87,8 @@ btnSort.onclick=async function insertionSort() {
       elements[count].style.transform = `translate(${matrix[4]}px,0px)`;
     }
     
-    elements[count].style.backgroundColor = "lightgreen";
-    elements[count-1].style.backgroundColor = "lightgreen";
+    elements[count].style.backgroundColor = "#00DD21";
+    elements[count-1].style.backgroundColor = "#00DD21";
   }
   matrix = window.getComputedStyle(elements[count-1]).transform;
   matrix = matrix.split(/\(|,\s|\)/).slice(1,7);
