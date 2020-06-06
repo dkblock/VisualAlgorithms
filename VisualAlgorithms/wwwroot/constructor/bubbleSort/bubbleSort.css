@@ -1,12 +1,3 @@
-@media screen and (orientation: portrait) { 
-
-  body {
-  display: none;
-  font-family: sans-serif;
-  }
-}
-
-
 .title {
     margin-top: 20px;
     text-align: center;
