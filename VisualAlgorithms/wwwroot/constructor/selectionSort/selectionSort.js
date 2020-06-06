@@ -1,3 +1,12 @@
+if (window.innerWidth < window.innerHeight ) {
+  alert("Пожалуйста, переверните экран телефона или расширьте окно для правильного отображения сайта и перезагрузите страницу");
+}
+
+let distance=75;
+if(window.innerWidth<740){
+ distance=60;
+}
+
 const blockSort = document.querySelector(".blockSort");
 
 function generateNumbers() {
@@ -7,7 +16,7 @@ function generateNumbers() {
 
     const blockNumber = document.createElement("div");
     blockNumber.classList.add("element");
-    blockNumber.style.transform = `translateX(${(i-4.5) * 75}px)`;
+    blockNumber.style.transform = `translateX(${(i-4.5) * distance}px)`;
 
     blockNumber.innerHTML = value;
     blockSort.appendChild(blockNumber);
@@ -33,6 +42,7 @@ function swap(element1, element2) {
 
         element2.parentNode.replaceChild(clonedElement1, element2);
         element1.parentNode.replaceChild(clonedElement2, element1);
+        clonedElement1.style.backgroundColor = "#0094FF"; 
         resolve();
       }, 2000);
     });
@@ -66,9 +76,13 @@ btnSort.onclick=async function selectionSort() {
     }
     elements[i].style.backgroundColor = "#FF0000"; 
     if(i!=min){
+      await new Promise(resolve =>
+        setTimeout(() => {
+          resolve();
+        }, 1000)
+      );
       await swap(elements[i], elements[min]);
     }
-    elements[i].style.backgroundColor = "#0094FF"; 
     elements = document.querySelectorAll(".element");
     elements[i].style.backgroundColor = "#00DD21";
   }
