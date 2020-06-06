@@ -35,7 +35,10 @@ namespace VisualAlgorithms.Controllers
         public async Task<IActionResult> Index(int? testsType, int? algorithmId, int? orderBy)
         {
             var testTypes = new List<string> { "Все", "Только выполненные", "Только невыполненные" };
-            var algorithms = await _db.Algorithms.ToListAsync();
+            var algorithms = await _db.Algorithms
+                .Include(al => al.Tests)
+                .Where(al => al.Tests.Any())
+                .ToListAsync();
             algorithms.Insert(0, new Algorithm { Id = 0, Name = "Все" });
 
             var tests = await _db.Tests
