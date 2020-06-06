@@ -27,6 +27,7 @@
 .btnSort {
     display: block;
     margin: 10px auto;
+    transition: 1s all ease;
 }
 
 

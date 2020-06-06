@@ -1,3 +1,12 @@
+if (window.innerWidth < window.innerHeight ) {
+  alert("Пожалуйста, переверните экран телефона или расширьте окно для правильного отображения сайта и перезагрузите страницу");
+}
+
+let distance=75;
+if(window.innerWidth<740){
+ distance=60;
+}
+
 const blockSort = document.querySelector(".blockSort");
 
 function generateNumbers() {
@@ -7,7 +16,7 @@ function generateNumbers() {
 
     const blockNumber = document.createElement("div");
     blockNumber.classList.add("element");
-    blockNumber.style.transform = `translateX(${(i-4.5) * 75}px)`;
+    blockNumber.style.transform = `translateX(${(i-4.5) * distance}px)`;
 
     blockNumber.innerHTML = value;
     blockSort.appendChild(blockNumber);

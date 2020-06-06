@@ -1,3 +1,12 @@
+@media screen and (orientation: portrait) { 
+
+  body {
+  display: none;
+  font-family: sans-serif;
+  }
+}
+
+
 .title {
     margin-top: 20px;
     text-align: center;
@@ -27,6 +36,7 @@
 .btnSort {
     display: block;
     margin: 10px auto;
+    transition: 1s all ease;
 }
 
 
